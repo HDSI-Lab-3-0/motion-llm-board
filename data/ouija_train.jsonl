@@ -1,0 +1,900 @@
+{"input": "Should I take the offer?", "output": "MAYBE"}
+{"input": "Is my professor going to message me?", "output": "NO"}
+{"input": "Should I start early this weekend?", "output": "YES"}
+{"input": "Will I go out this weekend tonight?", "output": "NO"}
+{"input": "Should I start early before bed?", "output": "YES"}
+{"input": "Is tomorrow going to be exciting?", "output": "YES"}
+{"input": "Will an opportunity happen in the next few days?", "output": "YES"}
+{"input": "Is it a good idea to go out in January?", "output": "NO"}
+{"input": "Is it a good idea to rest next week?", "output": "MAYBE"}
+{"input": "Will I regret next week?", "output": "NO"}
+{"input": "Will a surprise happen in the next few days?", "output": "YES"}
+{"input": "Am I going to meet someone?", "output": "MAYBE"}
+{"input": "Will I go out before bed tomorrow?", "output": "MAYBE"}
+{"input": "Will I regret today?", "output": "MAYBE"}
+{"input": "Is my professor going to message me?", "output": "YES"}
+{"input": "Should I take the bold choice?", "output": "MAYBE"}
+{"input": "Am I going to meet someone?", "output": "MAYBE"}
+{"input": "Will I regret before bed?", "output": "MAYBE"}
+{"input": "Will I regret in January?", "output": "NO"}
+{"input": "Am I going to pass my exam?", "output": "YES"}
+{"input": "Is my crush going to message me?", "output": "NO"}
+{"input": "Should I rest soon?", "output": "MAYBE"}
+{"input": "Will my before bed get better?", "output": "MAYBE"}
+{"input": "Will an opportunity happen this week?", "output": "MAYBE"}
+{"input": "Is they thinking about me?", "output": "NO"}
+{"input": "Is they thinking about me?", "output": "YES"}
+{"input": "Should I wait in January?", "output": "YES"}
+{"input": "Is it a good idea to switch majors this weekend?", "output": "MAYBE"}
+{"input": "Is it a good idea to switch majors tonight?", "output": "NO"}
+{"input": "Is my friend thinking about me?", "output": "YES"}
+{"input": "Am I going to fail?", "output": "YES"}
+{"input": "Should I take the job?", "output": "YES"}
+{"input": "Is my friend thinking about me?", "output": "MAYBE"}
+{"input": "Is my parents thinking about me?", "output": "NO"}
+{"input": "Is this week going to be lucky?", "output": "NO"}
+{"input": "Is my friend going to message me?", "output": "YES"}
+{"input": "Is it a good idea to go out tomorrow?", "output": "MAYBE"}
+{"input": "Is it a good idea to apply soon?", "output": "NO"}
+{"input": "Is my friend thinking about me?", "output": "NO"}
+{"input": "Should I take the job?", "output": "NO"}
+{"input": "Should I study this weekend?", "output": "MAYBE"}
+{"input": "Is it a good idea to go out this weekend?", "output": "NO"}
+{"input": "Will my today get better?", "output": "YES"}
+{"input": "Should I go out after class?", "output": "MAYBE"}
+{"input": "Is my parents going to message me?", "output": "MAYBE"}
+{"input": "Is it a good idea to take a risk soon?", "output": "YES"}
+{"input": "Am I going to get good news?", "output": "YES"}
+{"input": "Is tomorrow going to be exciting?", "output": "YES"}
+{"input": "Am I going to fail?", "output": "YES"}
+{"input": "Will I go out this weekend in the next few days?", "output": "MAYBE"}
+{"input": "Is it a good idea to wait next week?", "output": "NO"}
+{"input": "Should I take the trip?", "output": "NO"}
+{"input": "Is someone going to message me?", "output": "YES"}
+{"input": "Will a surprise happen soon?", "output": "NO"}
+{"input": "Will I rest before bed this week?", "output": "NO"}
+{"input": "Is my professor thinking about me?", "output": "MAYBE"}
+{"input": "Is it a good idea to wait today?", "output": "NO"}
+{"input": "Will my tonight get better?", "output": "NO"}
+{"input": "Will I regret after class?", "output": "MAYBE"}
+{"input": "Is my parents thinking about me?", "output": "MAYBE"}
+{"input": "Is my parents thinking about me?", "output": "NO"}
+{"input": "Will something unexpected happen this week?", "output": "YES"}
+{"input": "Is it a good idea to travel tomorrow?", "output": "NO"}
+{"input": "Should I go out today?", "output": "YES"}
+{"input": "Will a surprise happen soon?", "output": "NO"}
+{"input": "Will I apply next week in the next few days?", "output": "MAYBE"}
+{"input": "Is next week going to be weird?", "output": "YES"}
+{"input": "Is it a good idea to rest this weekend?", "output": "YES"}
+{"input": "Is it a good idea to rest in January?", "output": "YES"}
+{"input": "Is tonight going to be exciting?", "output": "YES"}
+{"input": "Is it a good idea to switch majors tomorrow?", "output": "MAYBE"}
+{"input": "Is it a good idea to wait before bed?", "output": "NO"}
+{"input": "Will a setback happen in the next few days?", "output": "MAYBE"}
+{"input": "Is my parents thinking about me?", "output": "YES"}
+{"input": "Is tonight going to be weird?", "output": "YES"}
+{"input": "Is soon going to be stressful?", "output": "MAYBE"}
+{"input": "Is it a good idea to study before bed?", "output": "YES"}
+{"input": "Will an opportunity happen tonight?", "output": "YES"}
+{"input": "Is it a good idea to travel tonight?", "output": "MAYBE"}
+{"input": "Will I regret soon?", "output": "NO"}
+{"input": "Will I rest tomorrow soon?", "output": "MAYBE"}
+{"input": "Will an opportunity happen soon?", "output": "YES"}
+{"input": "Will a surprise happen soon?", "output": "YES"}
+{"input": "Is my crush thinking about me?", "output": "YES"}
+{"input": "Am I going to get good news?", "output": "MAYBE"}
+{"input": "Should I take the new path?", "output": "NO"}
+{"input": "Will I regret before bed?", "output": "NO"}
+{"input": "Is it a good idea to go out in January?", "output": "MAYBE"}
+{"input": "Is soon going to be stressful?", "output": "NO"}
+{"input": "Am I going to meet someone?", "output": "NO"}
+{"input": "Will I regret before bed?", "output": "NO"}
+{"input": "Should I take the bold choice?", "output": "NO"}
+{"input": "Is next week going to be lucky?", "output": "YES"}
+{"input": "Will my in January get better?", "output": "YES"}
+{"input": "Should I take the trip?", "output": "NO"}
+{"input": "Is my friend thinking about me?", "output": "NO"}
+{"input": "Is it a good idea to switch majors tonight?", "output": "YES"}
+{"input": "Is it a good idea to study tomorrow?", "output": "YES"}
+{"input": "Is my friend going to message me?", "output": "YES"}
+{"input": "Will I rest soon in the next few days?", "output": "NO"}
+{"input": "Should I wait next week?", "output": "NO"}
+{"input": "Is my crush going to message me?", "output": "YES"}
+{"input": "Will my soon get better?", "output": "MAYBE"}
+{"input": "Am I going to feel better?", "output": "NO"}
+{"input": "Am I going to feel better?", "output": "NO"}
+{"input": "Will an opportunity happen in the next few days?", "output": "MAYBE"}
+{"input": "Am I going to pass my exam?", "output": "YES"}
+{"input": "Is in the next few days going to be stressful?", "output": "NO"}
+{"input": "Am I going to pass my exam?", "output": "YES"}
+{"input": "Will a surprise happen soon?", "output": "NO"}
+{"input": "Will a surprise happen this week?", "output": "YES"}
+{"input": "Am I going to fail?", "output": "YES"}
+{"input": "Is it a good idea to apply after class?", "output": "NO"}
+{"input": "Am I going to pass my exam?", "output": "YES"}
+{"input": "Is my crush thinking about me?", "output": "YES"}
+{"input": "Is my professor thinking about me?", "output": "MAYBE"}
+{"input": "Will I take a risk today in the next few days?", "output": "NO"}
+{"input": "Is they going to message me?", "output": "NO"}
+{"input": "Is my professor thinking about me?", "output": "MAYBE"}
+{"input": "Is it a good idea to take a risk today?", "output": "YES"}
+{"input": "Should I rest before bed?", "output": "MAYBE"}
+{"input": "Should I take the trip?", "output": "MAYBE"}
+{"input": "Am I going to meet someone?", "output": "MAYBE"}
+{"input": "Will I rest before bed in the next few days?", "output": "YES"}
+{"input": "Will I travel tomorrow next week?", "output": "NO"}
+{"input": "Will I study this weekend soon?", "output": "MAYBE"}
+{"input": "Is it a good idea to study soon?", "output": "YES"}
+{"input": "Should I take the trip?", "output": "MAYBE"}
+{"input": "Is it a good idea to rest in January?", "output": "YES"}
+{"input": "Is my professor going to message me?", "output": "YES"}
+{"input": "Is my parents going to message me?", "output": "YES"}
+{"input": "Should I take the bold choice?", "output": "NO"}
+{"input": "Is this week going to be exciting?", "output": "YES"}
+{"input": "Will good news happen next week?", "output": "MAYBE"}
+{"input": "Should I take the bold choice?", "output": "MAYBE"}
+{"input": "Will I regret soon?", "output": "MAYBE"}
+{"input": "Will I text them soon tonight?", "output": "NO"}
+{"input": "Will a surprise happen soon?", "output": "YES"}
+{"input": "Is my friend thinking about me?", "output": "YES"}
+{"input": "Will I start early after class next week?", "output": "MAYBE"}
+{"input": "Is tonight going to be quiet?", "output": "NO"}
+{"input": "Will my next week get better?", "output": "MAYBE"}
+{"input": "Am I going to fail?", "output": "YES"}
+{"input": "Is my professor going to message me?", "output": "MAYBE"}
+{"input": "Is my parents thinking about me?", "output": "MAYBE"}
+{"input": "Will I switch majors today tonight?", "output": "NO"}
+{"input": "Will I regret after class?", "output": "MAYBE"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Is it a good idea to rest tonight?", "output": "YES"}
+{"input": "Am I going to feel better?", "output": "MAYBE"}
+{"input": "Am I going to feel better?", "output": "MAYBE"}
+{"input": "Is it a good idea to wait this weekend?", "output": "NO"}
+{"input": "Am I going to feel better?", "output": "YES"}
+{"input": "Will an opportunity happen tomorrow?", "output": "YES"}
+{"input": "Is someone going to message me?", "output": "YES"}
+{"input": "Is it a good idea to travel this weekend?", "output": "MAYBE"}
+{"input": "Is they going to message me?", "output": "NO"}
+{"input": "Should I take the job?", "output": "NO"}
+{"input": "Should I rest in January?", "output": "NO"}
+{"input": "Am I going to fail?", "output": "NO"}
+{"input": "Should I take the trip?", "output": "YES"}
+{"input": "Is tonight going to be weird?", "output": "NO"}
+{"input": "Is it a good idea to apply before bed?", "output": "YES"}
+{"input": "Is my professor thinking about me?", "output": "NO"}
+{"input": "Should I take the bold choice?", "output": "YES"}
+{"input": "Should I rest this weekend?", "output": "NO"}
+{"input": "Will my next week get better?", "output": "MAYBE"}
+{"input": "Am I going to meet someone?", "output": "MAYBE"}
+{"input": "Will I wait in January in the next few days?", "output": "YES"}
+{"input": "Is they going to message me?", "output": "NO"}
+{"input": "Is my professor going to message me?", "output": "MAYBE"}
+{"input": "Should I study tomorrow?", "output": "YES"}
+{"input": "Am I going to pass my exam?", "output": "YES"}
+{"input": "Am I going to fail?", "output": "NO"}
+{"input": "Is someone thinking about me?", "output": "YES"}
+{"input": "Is my parents thinking about me?", "output": "YES"}
+{"input": "Is they thinking about me?", "output": "MAYBE"}
+{"input": "Will a setback happen tonight?", "output": "NO"}
+{"input": "Is this week going to be stressful?", "output": "MAYBE"}
+{"input": "Is my crush thinking about me?", "output": "NO"}
+{"input": "Should I travel tomorrow?", "output": "NO"}
+{"input": "Is next week going to be peaceful?", "output": "MAYBE"}
+{"input": "Will good news happen soon?", "output": "YES"}
+{"input": "Is my professor going to message me?", "output": "YES"}
+{"input": "Is it a good idea to travel in January?", "output": "NO"}
+{"input": "Will I start early after class tomorrow?", "output": "MAYBE"}
+{"input": "Is it a good idea to text them tomorrow?", "output": "YES"}
+{"input": "Should I take the new path?", "output": "YES"}
+{"input": "Is tonight going to be stressful?", "output": "NO"}
+{"input": "Will my after class get better?", "output": "YES"}
+{"input": "Is this week going to be quiet?", "output": "NO"}
+{"input": "Should I take the bold choice?", "output": "YES"}
+{"input": "Is it a good idea to go out soon?", "output": "YES"}
+{"input": "Will I regret today?", "output": "NO"}
+{"input": "Is it a good idea to travel before bed?", "output": "MAYBE"}
+{"input": "Am I going to be okay?", "output": "NO"}
+{"input": "Will I apply next week this week?", "output": "YES"}
+{"input": "Will I start early this weekend soon?", "output": "YES"}
+{"input": "Am I going to meet someone?", "output": "NO"}
+{"input": "Should I take the trip?", "output": "NO"}
+{"input": "Am I going to get good news?", "output": "YES"}
+{"input": "Is it a good idea to travel tonight?", "output": "YES"}
+{"input": "Is someone thinking about me?", "output": "NO"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Will a change happen in the next few days?", "output": "YES"}
+{"input": "Is my crush thinking about me?", "output": "YES"}
+{"input": "Will something unexpected happen this week?", "output": "YES"}
+{"input": "Is they thinking about me?", "output": "YES"}
+{"input": "Will a change happen soon?", "output": "YES"}
+{"input": "Will my this weekend get better?", "output": "MAYBE"}
+{"input": "Is in the next few days going to be quiet?", "output": "NO"}
+{"input": "Will an opportunity happen tonight?", "output": "YES"}
+{"input": "Will I apply in January this week?", "output": "YES"}
+{"input": "Is it a good idea to wait tomorrow?", "output": "MAYBE"}
+{"input": "Should I take the safe route?", "output": "NO"}
+{"input": "Should I take the new path?", "output": "YES"}
+{"input": "Will I take a risk soon tonight?", "output": "YES"}
+{"input": "Will a change happen tomorrow?", "output": "YES"}
+{"input": "Am I going to be okay?", "output": "YES"}
+{"input": "Is my professor thinking about me?", "output": "NO"}
+{"input": "Am I going to be okay?", "output": "MAYBE"}
+{"input": "Am I going to be okay?", "output": "NO"}
+{"input": "Will I regret tomorrow?", "output": "NO"}
+{"input": "Is my professor going to message me?", "output": "YES"}
+{"input": "Is my friend thinking about me?", "output": "NO"}
+{"input": "Is my friend thinking about me?", "output": "YES"}
+{"input": "Is my professor going to message me?", "output": "MAYBE"}
+{"input": "Should I wait tomorrow?", "output": "YES"}
+{"input": "Is tonight going to be quiet?", "output": "YES"}
+{"input": "Should I rest in January?", "output": "YES"}
+{"input": "Is my parents thinking about me?", "output": "NO"}
+{"input": "Will I regret in January?", "output": "NO"}
+{"input": "Will I start early before bed soon?", "output": "NO"}
+{"input": "Is it a good idea to travel in January?", "output": "MAYBE"}
+{"input": "Am I going to fail?", "output": "NO"}
+{"input": "Is it a good idea to rest tomorrow?", "output": "YES"}
+{"input": "Will I wait this weekend next week?", "output": "NO"}
+{"input": "Should I take the job?", "output": "MAYBE"}
+{"input": "Will I rest tonight next week?", "output": "YES"}
+{"input": "Should I travel this weekend?", "output": "NO"}
+{"input": "Will I regret before bed?", "output": "NO"}
+{"input": "Will my in January get better?", "output": "NO"}
+{"input": "Should I travel in January?", "output": "MAYBE"}
+{"input": "Should I take a risk today?", "output": "YES"}
+{"input": "Is next week going to be lucky?", "output": "MAYBE"}
+{"input": "Will I regret tomorrow?", "output": "MAYBE"}
+{"input": "Is soon going to be quiet?", "output": "MAYBE"}
+{"input": "Is it a good idea to rest after class?", "output": "MAYBE"}
+{"input": "Should I take the trip?", "output": "NO"}
+{"input": "Should I wait in January?", "output": "YES"}
+{"input": "Is it a good idea to travel this weekend?", "output": "YES"}
+{"input": "Is it a good idea to apply tonight?", "output": "MAYBE"}
+{"input": "Is my friend going to message me?", "output": "MAYBE"}
+{"input": "Is my friend thinking about me?", "output": "NO"}
+{"input": "Will I study this weekend soon?", "output": "YES"}
+{"input": "Is they going to message me?", "output": "YES"}
+{"input": "Should I study today?", "output": "NO"}
+{"input": "Will I rest this weekend tomorrow?", "output": "MAYBE"}
+{"input": "Will something unexpected happen this week?", "output": "NO"}
+{"input": "Is it a good idea to switch majors today?", "output": "NO"}
+{"input": "Will a setback happen in the next few days?", "output": "NO"}
+{"input": "Will I regret this weekend?", "output": "NO"}
+{"input": "Will I study next week next week?", "output": "YES"}
+{"input": "Will I regret in January?", "output": "NO"}
+{"input": "Will good news happen this week?", "output": "MAYBE"}
+{"input": "Is this week going to be quiet?", "output": "NO"}
+{"input": "Is in the next few days going to be weird?", "output": "NO"}
+{"input": "Will I regret this weekend?", "output": "MAYBE"}
+{"input": "Will my next week get better?", "output": "MAYBE"}
+{"input": "Am I going to fail?", "output": "YES"}
+{"input": "Will a surprise happen tomorrow?", "output": "NO"}
+{"input": "Will a setback happen soon?", "output": "NO"}
+{"input": "Should I start early tomorrow?", "output": "NO"}
+{"input": "Should I take the new path?", "output": "NO"}
+{"input": "Should I study today?", "output": "NO"}
+{"input": "Should I take the offer?", "output": "YES"}
+{"input": "Will I rest today in the next few days?", "output": "YES"}
+{"input": "Is my professor thinking about me?", "output": "YES"}
+{"input": "Is it a good idea to rest this weekend?", "output": "NO"}
+{"input": "Is my friend going to message me?", "output": "MAYBE"}
+{"input": "Is soon going to be lucky?", "output": "YES"}
+{"input": "Is it a good idea to go out in January?", "output": "NO"}
+{"input": "Is my professor thinking about me?", "output": "NO"}
+{"input": "Is my parents thinking about me?", "output": "MAYBE"}
+{"input": "Is it a good idea to apply this weekend?", "output": "NO"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Is tonight going to be weird?", "output": "YES"}
+{"input": "Is it a good idea to start early tonight?", "output": "YES"}
+{"input": "Is my professor thinking about me?", "output": "MAYBE"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Is this week going to be quiet?", "output": "MAYBE"}
+{"input": "Am I going to be okay?", "output": "MAYBE"}
+{"input": "Am I going to get good news?", "output": "YES"}
+{"input": "Am I going to pass my exam?", "output": "YES"}
+{"input": "Will I regret in January?", "output": "NO"}
+{"input": "Should I take the trip?", "output": "YES"}
+{"input": "Will I wait today tonight?", "output": "NO"}
+{"input": "Should I rest today?", "output": "YES"}
+{"input": "Will I regret this weekend?", "output": "NO"}
+{"input": "Will I regret this weekend?", "output": "MAYBE"}
+{"input": "Is it a good idea to wait before bed?", "output": "MAYBE"}
+{"input": "Am I going to pass my exam?", "output": "YES"}
+{"input": "Will my tomorrow get better?", "output": "NO"}
+{"input": "Will I regret in January?", "output": "MAYBE"}
+{"input": "Will I take a risk before bed this week?", "output": "MAYBE"}
+{"input": "Is tonight going to be quiet?", "output": "YES"}
+{"input": "Should I start early before bed?", "output": "MAYBE"}
+{"input": "Am I going to meet someone?", "output": "NO"}
+{"input": "Is tonight going to be quiet?", "output": "YES"}
+{"input": "Is in the next few days going to be weird?", "output": "MAYBE"}
+{"input": "Is in the next few days going to be peaceful?", "output": "NO"}
+{"input": "Is my professor going to message me?", "output": "NO"}
+{"input": "Should I rest in January?", "output": "YES"}
+{"input": "Will I rest tonight tomorrow?", "output": "YES"}
+{"input": "Is it a good idea to go out soon?", "output": "NO"}
+{"input": "Is my crush going to message me?", "output": "MAYBE"}
+{"input": "Will I regret before bed?", "output": "MAYBE"}
+{"input": "Is it a good idea to apply tonight?", "output": "MAYBE"}
+{"input": "Will something good happen tonight?", "output": "YES"}
+{"input": "Will I regret this weekend?", "output": "MAYBE"}
+{"input": "Is my parents thinking about me?", "output": "NO"}
+{"input": "Should I start early today?", "output": "MAYBE"}
+{"input": "Am I going to fail?", "output": "MAYBE"}
+{"input": "Will I start early today tonight?", "output": "YES"}
+{"input": "Should I take a risk tonight?", "output": "MAYBE"}
+{"input": "Will my this weekend get better?", "output": "YES"}
+{"input": "Is they going to message me?", "output": "MAYBE"}
+{"input": "Is next week going to be quiet?", "output": "YES"}
+{"input": "Is my professor going to message me?", "output": "MAYBE"}
+{"input": "Is my professor thinking about me?", "output": "YES"}
+{"input": "Will I regret soon?", "output": "NO"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Will a setback happen tonight?", "output": "MAYBE"}
+{"input": "Will something good happen this week?", "output": "MAYBE"}
+{"input": "Is tonight going to be lucky?", "output": "MAYBE"}
+{"input": "Will I travel tonight next week?", "output": "YES"}
+{"input": "Should I take the safe route?", "output": "MAYBE"}
+{"input": "Am I going to fail?", "output": "MAYBE"}
+{"input": "Is they thinking about me?", "output": "YES"}
+{"input": "Is next week going to be lucky?", "output": "YES"}
+{"input": "Should I take the offer?", "output": "NO"}
+{"input": "Is it a good idea to take a risk next week?", "output": "NO"}
+{"input": "Will I regret today?", "output": "MAYBE"}
+{"input": "Should I take the offer?", "output": "NO"}
+{"input": "Is next week going to be weird?", "output": "MAYBE"}
+{"input": "Will I study after class soon?", "output": "MAYBE"}
+{"input": "Will good news happen in the next few days?", "output": "YES"}
+{"input": "Is someone going to message me?", "output": "MAYBE"}
+{"input": "Is my parents going to message me?", "output": "NO"}
+{"input": "Will something unexpected happen next week?", "output": "MAYBE"}
+{"input": "Will my in January get better?", "output": "YES"}
+{"input": "Is my parents going to message me?", "output": "YES"}
+{"input": "Is it a good idea to take a risk today?", "output": "YES"}
+{"input": "Is tomorrow going to be quiet?", "output": "NO"}
+{"input": "Is it a good idea to text them soon?", "output": "MAYBE"}
+{"input": "Is someone going to message me?", "output": "NO"}
+{"input": "Will my next week get better?", "output": "YES"}
+{"input": "Is it a good idea to go out tomorrow?", "output": "YES"}
+{"input": "Will I regret today?", "output": "NO"}
+{"input": "Is it a good idea to switch majors this weekend?", "output": "NO"}
+{"input": "Is it a good idea to travel before bed?", "output": "YES"}
+{"input": "Should I study before bed?", "output": "MAYBE"}
+{"input": "Should I apply in January?", "output": "MAYBE"}
+{"input": "Is my professor thinking about me?", "output": "MAYBE"}
+{"input": "Will my before bed get better?", "output": "MAYBE"}
+{"input": "Is this week going to be quiet?", "output": "NO"}
+{"input": "Is it a good idea to wait soon?", "output": "YES"}
+{"input": "Will my tonight get better?", "output": "NO"}
+{"input": "Is my parents thinking about me?", "output": "NO"}
+{"input": "Should I take the safe route?", "output": "MAYBE"}
+{"input": "Will good news happen next week?", "output": "YES"}
+{"input": "Is it a good idea to take a risk next week?", "output": "MAYBE"}
+{"input": "Is it a good idea to switch majors tomorrow?", "output": "YES"}
+{"input": "Is my friend going to message me?", "output": "MAYBE"}
+{"input": "Will something unexpected happen next week?", "output": "NO"}
+{"input": "Am I going to get good news?", "output": "MAYBE"}
+{"input": "Am I going to meet someone?", "output": "YES"}
+{"input": "Should I rest this weekend?", "output": "NO"}
+{"input": "Am I going to feel better?", "output": "YES"}
+{"input": "Will I regret tonight?", "output": "MAYBE"}
+{"input": "Is soon going to be peaceful?", "output": "YES"}
+{"input": "Is tonight going to be chaotic?", "output": "MAYBE"}
+{"input": "Will my before bed get better?", "output": "MAYBE"}
+{"input": "Is someone going to message me?", "output": "MAYBE"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Will my tonight get better?", "output": "YES"}
+{"input": "Is my friend thinking about me?", "output": "MAYBE"}
+{"input": "Will I take a risk soon in the next few days?", "output": "MAYBE"}
+{"input": "Will something unexpected happen in the next few days?", "output": "YES"}
+{"input": "Will I regret this weekend?", "output": "NO"}
+{"input": "Will a change happen soon?", "output": "NO"}
+{"input": "Will I regret this weekend?", "output": "NO"}
+{"input": "Will I regret before bed?", "output": "NO"}
+{"input": "Will my after class get better?", "output": "MAYBE"}
+{"input": "Am I going to meet someone?", "output": "MAYBE"}
+{"input": "Will a change happen tonight?", "output": "NO"}
+{"input": "Is tomorrow going to be peaceful?", "output": "YES"}
+{"input": "Am I going to meet someone?", "output": "YES"}
+{"input": "Is in the next few days going to be exciting?", "output": "YES"}
+{"input": "Will I regret tonight?", "output": "NO"}
+{"input": "Will my in January get better?", "output": "MAYBE"}
+{"input": "Am I going to fail?", "output": "NO"}
+{"input": "Is it a good idea to text them today?", "output": "YES"}
+{"input": "Am I going to fail?", "output": "NO"}
+{"input": "Will a surprise happen this week?", "output": "YES"}
+{"input": "Is tonight going to be peaceful?", "output": "NO"}
+{"input": "Will a setback happen tonight?", "output": "MAYBE"}
+{"input": "Should I start early tonight?", "output": "NO"}
+{"input": "Will I regret today?", "output": "NO"}
+{"input": "Should I take the trip?", "output": "MAYBE"}
+{"input": "Will I regret soon?", "output": "NO"}
+{"input": "Am I going to fail?", "output": "YES"}
+{"input": "Am I going to fail?", "output": "YES"}
+{"input": "Will my tonight get better?", "output": "NO"}
+{"input": "Will I regret this weekend?", "output": "NO"}
+{"input": "Is it a good idea to rest tomorrow?", "output": "NO"}
+{"input": "Should I start early tomorrow?", "output": "NO"}
+{"input": "Will I go out tonight in the next few days?", "output": "NO"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Is someone thinking about me?", "output": "MAYBE"}
+{"input": "Will an opportunity happen tonight?", "output": "MAYBE"}
+{"input": "Is soon going to be stressful?", "output": "NO"}
+{"input": "Am I going to be okay?", "output": "YES"}
+{"input": "Should I take the new path?", "output": "NO"}
+{"input": "Is soon going to be stressful?", "output": "MAYBE"}
+{"input": "Should I rest next week?", "output": "MAYBE"}
+{"input": "Should I wait in January?", "output": "NO"}
+{"input": "Will I regret next week?", "output": "MAYBE"}
+{"input": "Should I take the trip?", "output": "NO"}
+{"input": "Will I apply tomorrow next week?", "output": "YES"}
+{"input": "Will my before bed get better?", "output": "NO"}
+{"input": "Should I start early before bed?", "output": "NO"}
+{"input": "Will something unexpected happen tonight?", "output": "MAYBE"}
+{"input": "Will my in January get better?", "output": "NO"}
+{"input": "Should I switch majors after class?", "output": "MAYBE"}
+{"input": "Is tonight going to be quiet?", "output": "YES"}
+{"input": "Is in the next few days going to be stressful?", "output": "MAYBE"}
+{"input": "Is someone thinking about me?", "output": "NO"}
+{"input": "Should I switch majors tonight?", "output": "NO"}
+{"input": "Should I take the offer?", "output": "NO"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Is my professor going to message me?", "output": "NO"}
+{"input": "Is my parents going to message me?", "output": "MAYBE"}
+{"input": "Is tonight going to be exciting?", "output": "YES"}
+{"input": "Is it a good idea to study next week?", "output": "NO"}
+{"input": "Will something good happen soon?", "output": "NO"}
+{"input": "Will a surprise happen this week?", "output": "YES"}
+{"input": "Will I travel soon in the next few days?", "output": "YES"}
+{"input": "Is in the next few days going to be quiet?", "output": "MAYBE"}
+{"input": "Is tomorrow going to be weird?", "output": "NO"}
+{"input": "Am I going to get good news?", "output": "YES"}
+{"input": "Is they thinking about me?", "output": "NO"}
+{"input": "Is it a good idea to travel next week?", "output": "MAYBE"}
+{"input": "Will I take a risk today tomorrow?", "output": "NO"}
+{"input": "Will I regret this weekend?", "output": "NO"}
+{"input": "Should I take the job?", "output": "MAYBE"}
+{"input": "Will I travel tonight tonight?", "output": "NO"}
+{"input": "Is someone thinking about me?", "output": "MAYBE"}
+{"input": "Is someone thinking about me?", "output": "YES"}
+{"input": "Will I apply soon this week?", "output": "YES"}
+{"input": "Is my parents going to message me?", "output": "MAYBE"}
+{"input": "Should I take the trip?", "output": "YES"}
+{"input": "Should I take the trip?", "output": "MAYBE"}
+{"input": "Will a surprise happen this week?", "output": "YES"}
+{"input": "Should I take the offer?", "output": "YES"}
+{"input": "Should I take the offer?", "output": "NO"}
+{"input": "Is soon going to be weird?", "output": "NO"}
+{"input": "Is my crush going to message me?", "output": "MAYBE"}
+{"input": "Should I take the bold choice?", "output": "MAYBE"}
+{"input": "Is my crush thinking about me?", "output": "YES"}
+{"input": "Should I take the bold choice?", "output": "YES"}
+{"input": "Will I rest tomorrow in the next few days?", "output": "YES"}
+{"input": "Is my parents going to message me?", "output": "NO"}
+{"input": "Is it a good idea to apply after class?", "output": "YES"}
+{"input": "Will a surprise happen soon?", "output": "NO"}
+{"input": "Is someone going to message me?", "output": "YES"}
+{"input": "Is someone thinking about me?", "output": "MAYBE"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Is my parents going to message me?", "output": "YES"}
+{"input": "Is my parents thinking about me?", "output": "MAYBE"}
+{"input": "Is it a good idea to switch majors in January?", "output": "YES"}
+{"input": "Should I study tomorrow?", "output": "YES"}
+{"input": "Will I apply after class this week?", "output": "NO"}
+{"input": "Am I going to get good news?", "output": "YES"}
+{"input": "Will I rest after class next week?", "output": "YES"}
+{"input": "Is my crush thinking about me?", "output": "YES"}
+{"input": "Will I apply next week this week?", "output": "NO"}
+{"input": "Will a change happen tonight?", "output": "MAYBE"}
+{"input": "Will I text them before bed in the next few days?", "output": "YES"}
+{"input": "Should I rest today?", "output": "NO"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Is this week going to be weird?", "output": "MAYBE"}
+{"input": "Am I going to be okay?", "output": "MAYBE"}
+{"input": "Is soon going to be chaotic?", "output": "MAYBE"}
+{"input": "Is my friend thinking about me?", "output": "NO"}
+{"input": "Is my professor going to message me?", "output": "NO"}
+{"input": "Will I regret after class?", "output": "MAYBE"}
+{"input": "Will I regret today?", "output": "NO"}
+{"input": "Am I going to pass my exam?", "output": "MAYBE"}
+{"input": "Will a surprise happen soon?", "output": "NO"}
+{"input": "Will I text them next week tonight?", "output": "MAYBE"}
+{"input": "Should I take the offer?", "output": "NO"}
+{"input": "Is this week going to be chaotic?", "output": "MAYBE"}
+{"input": "Should I take the job?", "output": "NO"}
+{"input": "Will my before bed get better?", "output": "YES"}
+{"input": "Will a setback happen soon?", "output": "NO"}
+{"input": "Will I go out today this week?", "output": "NO"}
+{"input": "Is tomorrow going to be chaotic?", "output": "MAYBE"}
+{"input": "Is someone thinking about me?", "output": "YES"}
+{"input": "Will I regret tomorrow?", "output": "MAYBE"}
+{"input": "Is next week going to be exciting?", "output": "YES"}
+{"input": "Should I wait tonight?", "output": "YES"}
+{"input": "Is it a good idea to take a risk after class?", "output": "MAYBE"}
+{"input": "Will I go out this weekend soon?", "output": "MAYBE"}
+{"input": "Is my crush thinking about me?", "output": "MAYBE"}
+{"input": "Is my friend thinking about me?", "output": "YES"}
+{"input": "Will a change happen tonight?", "output": "YES"}
+{"input": "Should I take the trip?", "output": "MAYBE"}
+{"input": "Will I text them tomorrow next week?", "output": "NO"}
+{"input": "Will I go out tonight soon?", "output": "MAYBE"}
+{"input": "Is it a good idea to start early soon?", "output": "YES"}
+{"input": "Is someone going to message me?", "output": "YES"}
+{"input": "Will my tomorrow get better?", "output": "MAYBE"}
+{"input": "Is my crush going to message me?", "output": "NO"}
+{"input": "Should I take the trip?", "output": "NO"}
+{"input": "Is my professor thinking about me?", "output": "YES"}
+{"input": "Is it a good idea to start early soon?", "output": "YES"}
+{"input": "Is it a good idea to rest tomorrow?", "output": "YES"}
+{"input": "Will my soon get better?", "output": "YES"}
+{"input": "Will a setback happen soon?", "output": "NO"}
+{"input": "Will good news happen next week?", "output": "YES"}
+{"input": "Should I rest this weekend?", "output": "NO"}
+{"input": "Is they thinking about me?", "output": "YES"}
+{"input": "Am I going to get good news?", "output": "YES"}
+{"input": "Should I start early soon?", "output": "NO"}
+{"input": "Will my this weekend get better?", "output": "MAYBE"}
+{"input": "Is soon going to be stressful?", "output": "MAYBE"}
+{"input": "Is my professor thinking about me?", "output": "YES"}
+{"input": "Should I take the bold choice?", "output": "YES"}
+{"input": "Is my parents thinking about me?", "output": "MAYBE"}
+{"input": "Is tomorrow going to be quiet?", "output": "YES"}
+{"input": "Will my after class get better?", "output": "YES"}
+{"input": "Will I regret in January?", "output": "MAYBE"}
+{"input": "Will my this weekend get better?", "output": "MAYBE"}
+{"input": "Is my crush thinking about me?", "output": "YES"}
+{"input": "Will I regret soon?", "output": "NO"}
+{"input": "Will I switch majors tonight in the next few days?", "output": "NO"}
+{"input": "Is they thinking about me?", "output": "YES"}
+{"input": "Will my before bed get better?", "output": "NO"}
+{"input": "Is this week going to be weird?", "output": "MAYBE"}
+{"input": "Is it a good idea to take a risk before bed?", "output": "YES"}
+{"input": "Am I going to get good news?", "output": "MAYBE"}
+{"input": "Is it a good idea to switch majors after class?", "output": "YES"}
+{"input": "Will I regret tonight?", "output": "MAYBE"}
+{"input": "Will my this weekend get better?", "output": "YES"}
+{"input": "Will I regret before bed?", "output": "NO"}
+{"input": "Is my crush going to message me?", "output": "NO"}
+{"input": "Is it a good idea to switch majors tonight?", "output": "MAYBE"}
+{"input": "Will something unexpected happen soon?", "output": "NO"}
+{"input": "Is my friend going to message me?", "output": "NO"}
+{"input": "Should I start early soon?", "output": "YES"}
+{"input": "Will I regret soon?", "output": "NO"}
+{"input": "Should I take the bold choice?", "output": "NO"}
+{"input": "Should I take the bold choice?", "output": "YES"}
+{"input": "Is tonight going to be stressful?", "output": "NO"}
+{"input": "Should I switch majors soon?", "output": "NO"}
+{"input": "Should I take the trip?", "output": "MAYBE"}
+{"input": "Will I study today in the next few days?", "output": "YES"}
+{"input": "Is it a good idea to go out tonight?", "output": "MAYBE"}
+{"input": "Will I go out today this week?", "output": "MAYBE"}
+{"input": "Should I start early tonight?", "output": "NO"}
+{"input": "Is my parents going to message me?", "output": "MAYBE"}
+{"input": "Is my parents going to message me?", "output": "MAYBE"}
+{"input": "Is my parents thinking about me?", "output": "YES"}
+{"input": "Should I rest next week?", "output": "MAYBE"}
+{"input": "Will I regret in January?", "output": "MAYBE"}
+{"input": "Is someone going to message me?", "output": "MAYBE"}
+{"input": "Should I rest this weekend?", "output": "MAYBE"}
+{"input": "Will I rest today this week?", "output": "YES"}
+{"input": "Is it a good idea to go out today?", "output": "YES"}
+{"input": "Will I regret this weekend?", "output": "NO"}
+{"input": "Is someone going to message me?", "output": "MAYBE"}
+{"input": "Will my in January get better?", "output": "NO"}
+{"input": "Is it a good idea to travel next week?", "output": "NO"}
+{"input": "Is someone thinking about me?", "output": "NO"}
+{"input": "Am I going to get good news?", "output": "MAYBE"}
+{"input": "Should I take the new path?", "output": "YES"}
+{"input": "Is someone going to message me?", "output": "NO"}
+{"input": "Will I apply after class tomorrow?", "output": "NO"}
+{"input": "Is my friend thinking about me?", "output": "YES"}
+{"input": "Is someone going to message me?", "output": "NO"}
+{"input": "Am I going to pass my exam?", "output": "MAYBE"}
+{"input": "Will my after class get better?", "output": "NO"}
+{"input": "Will my soon get better?", "output": "YES"}
+{"input": "Should I take the safe route?", "output": "NO"}
+{"input": "Should I take the trip?", "output": "NO"}
+{"input": "Will I study soon next week?", "output": "YES"}
+{"input": "Is soon going to be exciting?", "output": "YES"}
+{"input": "Will I rest soon tonight?", "output": "NO"}
+{"input": "Is it a good idea to study today?", "output": "NO"}
+{"input": "Is in the next few days going to be chaotic?", "output": "YES"}
+{"input": "Will I apply tomorrow next week?", "output": "MAYBE"}
+{"input": "Is my professor going to message me?", "output": "NO"}
+{"input": "Should I switch majors this weekend?", "output": "MAYBE"}
+{"input": "Should I go out in January?", "output": "NO"}
+{"input": "Will my soon get better?", "output": "NO"}
+{"input": "Is my parents thinking about me?", "output": "YES"}
+{"input": "Is my friend thinking about me?", "output": "YES"}
+{"input": "Should I take the bold choice?", "output": "MAYBE"}
+{"input": "Will I rest tomorrow in the next few days?", "output": "NO"}
+{"input": "Is it a good idea to switch majors soon?", "output": "NO"}
+{"input": "Is next week going to be peaceful?", "output": "YES"}
+{"input": "Am I going to be okay?", "output": "NO"}
+{"input": "Is my parents thinking about me?", "output": "MAYBE"}
+{"input": "Will I regret soon?", "output": "NO"}
+{"input": "Is it a good idea to apply today?", "output": "YES"}
+{"input": "Will my this weekend get better?", "output": "NO"}
+{"input": "Is they going to message me?", "output": "NO"}
+{"input": "Is my friend going to message me?", "output": "YES"}
+{"input": "Will a setback happen tomorrow?", "output": "MAYBE"}
+{"input": "Is tomorrow going to be peaceful?", "output": "MAYBE"}
+{"input": "Is in the next few days going to be chaotic?", "output": "YES"}
+{"input": "Will my tonight get better?", "output": "MAYBE"}
+{"input": "Will I regret tomorrow?", "output": "NO"}
+{"input": "Will I start early tomorrow tomorrow?", "output": "NO"}
+{"input": "Should I take the safe route?", "output": "MAYBE"}
+{"input": "Will a surprise happen tonight?", "output": "NO"}
+{"input": "Should I take the trip?", "output": "MAYBE"}
+{"input": "Will my next week get better?", "output": "NO"}
+{"input": "Will I wait today tonight?", "output": "NO"}
+{"input": "Will I regret before bed?", "output": "NO"}
+{"input": "Will my tomorrow get better?", "output": "MAYBE"}
+{"input": "Will good news happen tonight?", "output": "YES"}
+{"input": "Will I text them after class soon?", "output": "YES"}
+{"input": "Will I study after class in the next few days?", "output": "MAYBE"}
+{"input": "Will I regret before bed?", "output": "NO"}
+{"input": "Will I regret in January?", "output": "NO"}
+{"input": "Will I rest tonight this week?", "output": "YES"}
+{"input": "Should I switch majors before bed?", "output": "YES"}
+{"input": "Is they going to message me?", "output": "MAYBE"}
+{"input": "Is next week going to be stressful?", "output": "NO"}
+{"input": "Am I going to get good news?", "output": "MAYBE"}
+{"input": "Is someone going to message me?", "output": "NO"}
+{"input": "Am I going to be okay?", "output": "NO"}
+{"input": "Will my after class get better?", "output": "YES"}
+{"input": "Will my in January get better?", "output": "YES"}
+{"input": "Is someone going to message me?", "output": "NO"}
+{"input": "Is my professor thinking about me?", "output": "YES"}
+{"input": "Will I regret before bed?", "output": "NO"}
+{"input": "Will I rest tonight next week?", "output": "YES"}
+{"input": "Should I text them soon?", "output": "YES"}
+{"input": "Will my this weekend get better?", "output": "NO"}
+{"input": "Is my parents going to message me?", "output": "YES"}
+{"input": "Should I switch majors tomorrow?", "output": "NO"}
+{"input": "Should I take a risk today?", "output": "NO"}
+{"input": "Will something good happen tomorrow?", "output": "YES"}
+{"input": "Is my parents going to message me?", "output": "MAYBE"}
+{"input": "Is someone going to message me?", "output": "NO"}
+{"input": "Is soon going to be exciting?", "output": "YES"}
+{"input": "Is my crush going to message me?", "output": "YES"}
+{"input": "Will an opportunity happen tomorrow?", "output": "YES"}
+{"input": "Will a surprise happen tomorrow?", "output": "YES"}
+{"input": "Am I going to feel better?", "output": "NO"}
+{"input": "Is my professor thinking about me?", "output": "YES"}
+{"input": "Will an opportunity happen tonight?", "output": "MAYBE"}
+{"input": "Will my today get better?", "output": "NO"}
+{"input": "Will I switch majors tomorrow tonight?", "output": "YES"}
+{"input": "Is it a good idea to study next week?", "output": "YES"}
+{"input": "Am I going to fail?", "output": "YES"}
+{"input": "Is someone thinking about me?", "output": "NO"}
+{"input": "Will I start early in January next week?", "output": "YES"}
+{"input": "Will my soon get better?", "output": "NO"}
+{"input": "Is it a good idea to switch majors tomorrow?", "output": "MAYBE"}
+{"input": "Is my parents thinking about me?", "output": "MAYBE"}
+{"input": "Is in the next few days going to be stressful?", "output": "MAYBE"}
+{"input": "Should I travel tomorrow?", "output": "MAYBE"}
+{"input": "Should I take the offer?", "output": "MAYBE"}
+{"input": "Is it a good idea to study next week?", "output": "MAYBE"}
+{"input": "Will I regret this weekend?", "output": "NO"}
+{"input": "Will I regret before bed?", "output": "NO"}
+{"input": "Should I apply before bed?", "output": "YES"}
+{"input": "Is in the next few days going to be peaceful?", "output": "YES"}
+{"input": "Will I regret after class?", "output": "NO"}
+{"input": "Am I going to feel better?", "output": "YES"}
+{"input": "Will my in January get better?", "output": "YES"}
+{"input": "Should I take the safe route?", "output": "MAYBE"}
+{"input": "Will an opportunity happen tonight?", "output": "YES"}
+{"input": "Will I regret tomorrow?", "output": "MAYBE"}
+{"input": "Will good news happen this week?", "output": "MAYBE"}
+{"input": "Will my this weekend get better?", "output": "YES"}
+{"input": "Will my before bed get better?", "output": "NO"}
+{"input": "Should I take the new path?", "output": "YES"}
+{"input": "Should I wait in January?", "output": "NO"}
+{"input": "Should I wait this weekend?", "output": "YES"}
+{"input": "Will I regret next week?", "output": "NO"}
+{"input": "Will I regret tonight?", "output": "NO"}
+{"input": "Should I take the trip?", "output": "YES"}
+{"input": "Should I take the job?", "output": "MAYBE"}
+{"input": "Is it a good idea to travel soon?", "output": "NO"}
+{"input": "Should I rest tomorrow?", "output": "YES"}
+{"input": "Is tonight going to be chaotic?", "output": "YES"}
+{"input": "Will I regret in January?", "output": "NO"}
+{"input": "Will a change happen tonight?", "output": "YES"}
+{"input": "Should I take the new path?", "output": "NO"}
+{"input": "Is tomorrow going to be quiet?", "output": "MAYBE"}
+{"input": "Is it a good idea to switch majors soon?", "output": "NO"}
+{"input": "Will I apply in January tonight?", "output": "NO"}
+{"input": "Am I going to get good news?", "output": "YES"}
+{"input": "Will an opportunity happen tomorrow?", "output": "MAYBE"}
+{"input": "Is it a good idea to study today?", "output": "NO"}
+{"input": "Is it a good idea to travel in January?", "output": "NO"}
+{"input": "Is someone thinking about me?", "output": "YES"}
+{"input": "Will a change happen next week?", "output": "MAYBE"}
+{"input": "Will my after class get better?", "output": "YES"}
+{"input": "Should I text them today?", "output": "YES"}
+{"input": "Am I going to feel better?", "output": "YES"}
+{"input": "Should I rest tomorrow?", "output": "MAYBE"}
+{"input": "Should I apply this weekend?", "output": "YES"}
+{"input": "Will something good happen this week?", "output": "YES"}
+{"input": "Is it a good idea to start early after class?", "output": "NO"}
+{"input": "Should I switch majors this weekend?", "output": "MAYBE"}
+{"input": "Will I rest after class next week?", "output": "YES"}
+{"input": "Should I apply soon?", "output": "NO"}
+{"input": "Should I take the safe route?", "output": "MAYBE"}
+{"input": "Will a change happen tomorrow?", "output": "YES"}
+{"input": "Should I take the new path?", "output": "NO"}
+{"input": "Am I going to be okay?", "output": "MAYBE"}
+{"input": "Am I going to fail?", "output": "YES"}
+{"input": "Should I take a risk after class?", "output": "YES"}
+{"input": "Is my crush thinking about me?", "output": "NO"}
+{"input": "Will something unexpected happen tonight?", "output": "MAYBE"}
+{"input": "Will I regret tomorrow?", "output": "NO"}
+{"input": "Should I study tomorrow?", "output": "NO"}
+{"input": "Will I regret today?", "output": "NO"}
+{"input": "Should I take the new path?", "output": "NO"}
+{"input": "Should I start early this weekend?", "output": "YES"}
+{"input": "Is it a good idea to travel after class?", "output": "NO"}
+{"input": "Is my parents thinking about me?", "output": "YES"}
+{"input": "Am I going to be okay?", "output": "YES"}
+{"input": "Should I travel soon?", "output": "MAYBE"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Is tomorrow going to be peaceful?", "output": "YES"}
+{"input": "Will a surprise happen in the next few days?", "output": "NO"}
+{"input": "Is soon going to be chaotic?", "output": "NO"}
+{"input": "Should I take a risk this weekend?", "output": "YES"}
+{"input": "Is it a good idea to switch majors soon?", "output": "NO"}
+{"input": "Will my next week get better?", "output": "YES"}
+{"input": "Is my professor going to message me?", "output": "NO"}
+{"input": "Should I take the safe route?", "output": "NO"}
+{"input": "Should I apply tonight?", "output": "YES"}
+{"input": "Should I take the trip?", "output": "YES"}
+{"input": "Am I going to fail?", "output": "MAYBE"}
+{"input": "Should I take the bold choice?", "output": "NO"}
+{"input": "Am I going to pass my exam?", "output": "YES"}
+{"input": "Should I wait next week?", "output": "YES"}
+{"input": "Is it a good idea to travel soon?", "output": "MAYBE"}
+{"input": "Should I take the bold choice?", "output": "NO"}
+{"input": "Should I take the job?", "output": "NO"}
+{"input": "Will I regret after class?", "output": "NO"}
+{"input": "Is my friend thinking about me?", "output": "NO"}
+{"input": "Is someone thinking about me?", "output": "YES"}
+{"input": "Is it a good idea to switch majors this weekend?", "output": "YES"}
+{"input": "Should I take the bold choice?", "output": "YES"}
+{"input": "Is someone going to message me?", "output": "MAYBE"}
+{"input": "Will I regret tomorrow?", "output": "MAYBE"}
+{"input": "Should I apply next week?", "output": "MAYBE"}
+{"input": "Is it a good idea to take a risk tonight?", "output": "MAYBE"}
+{"input": "Will I regret next week?", "output": "MAYBE"}
+{"input": "Is it a good idea to go out today?", "output": "YES"}
+{"input": "Will I regret next week?", "output": "NO"}
+{"input": "Is someone thinking about me?", "output": "NO"}
+{"input": "Will my before bed get better?", "output": "YES"}
+{"input": "Should I take the trip?", "output": "NO"}
+{"input": "Is in the next few days going to be peaceful?", "output": "NO"}
+{"input": "Will my today get better?", "output": "YES"}
+{"input": "Should I text them today?", "output": "MAYBE"}
+{"input": "Is my friend going to message me?", "output": "MAYBE"}
+{"input": "Am I going to feel better?", "output": "YES"}
+{"input": "Will I regret today?", "output": "MAYBE"}
+{"input": "Should I take the bold choice?", "output": "MAYBE"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Will something unexpected happen in the next few days?", "output": "YES"}
+{"input": "Will a setback happen soon?", "output": "NO"}
+{"input": "Is my friend thinking about me?", "output": "MAYBE"}
+{"input": "Is it a good idea to text them tomorrow?", "output": "MAYBE"}
+{"input": "Is in the next few days going to be weird?", "output": "MAYBE"}
+{"input": "Is they thinking about me?", "output": "MAYBE"}
+{"input": "Should I take a risk after class?", "output": "MAYBE"}
+{"input": "Will my soon get better?", "output": "MAYBE"}
+{"input": "Am I going to be okay?", "output": "MAYBE"}
+{"input": "Am I going to pass my exam?", "output": "YES"}
+{"input": "Is someone thinking about me?", "output": "MAYBE"}
+{"input": "Is my friend going to message me?", "output": "MAYBE"}
+{"input": "Will I regret this weekend?", "output": "NO"}
+{"input": "Is it a good idea to take a risk soon?", "output": "NO"}
+{"input": "Is it a good idea to wait tomorrow?", "output": "YES"}
+{"input": "Will I regret tonight?", "output": "NO"}
+{"input": "Am I going to feel better?", "output": "MAYBE"}
+{"input": "Is my professor thinking about me?", "output": "NO"}
+{"input": "Will I regret next week?", "output": "NO"}
+{"input": "Is tonight going to be chaotic?", "output": "NO"}
+{"input": "Will my after class get better?", "output": "NO"}
+{"input": "Will a surprise happen soon?", "output": "NO"}
+{"input": "Will I regret tonight?", "output": "MAYBE"}
+{"input": "Is my professor thinking about me?", "output": "NO"}
+{"input": "Will a surprise happen in the next few days?", "output": "YES"}
+{"input": "Is in the next few days going to be stressful?", "output": "MAYBE"}
+{"input": "Will I go out tonight tonight?", "output": "YES"}
+{"input": "Am I going to pass my exam?", "output": "MAYBE"}
+{"input": "Am I going to be okay?", "output": "YES"}
+{"input": "Should I go out after class?", "output": "YES"}
+{"input": "Is my parents going to message me?", "output": "NO"}
+{"input": "Should I rest next week?", "output": "MAYBE"}
+{"input": "Should I take the safe route?", "output": "YES"}
+{"input": "Is soon going to be chaotic?", "output": "MAYBE"}
+{"input": "Is tomorrow going to be weird?", "output": "YES"}
+{"input": "Will I take a risk before bed in the next few days?", "output": "YES"}
+{"input": "Will my this weekend get better?", "output": "YES"}
+{"input": "Am I going to meet someone?", "output": "MAYBE"}
+{"input": "Will I study this weekend tomorrow?", "output": "MAYBE"}
+{"input": "Is it a good idea to wait next week?", "output": "YES"}
+{"input": "Will my tomorrow get better?", "output": "MAYBE"}
+{"input": "Should I apply before bed?", "output": "YES"}
+{"input": "Will good news happen next week?", "output": "YES"}
+{"input": "Will I apply tomorrow soon?", "output": "YES"}
+{"input": "Will I travel today in the next few days?", "output": "NO"}
+{"input": "Is it a good idea to start early this weekend?", "output": "NO"}
+{"input": "Is someone thinking about me?", "output": "YES"}
+{"input": "Will my before bed get better?", "output": "NO"}
+{"input": "Is it a good idea to rest this weekend?", "output": "MAYBE"}
+{"input": "Is it a good idea to rest this weekend?", "output": "YES"}
+{"input": "Will a surprise happen soon?", "output": "NO"}
+{"input": "Is my friend going to message me?", "output": "MAYBE"}
+{"input": "Am I going to fail?", "output": "YES"}
+{"input": "Is this week going to be quiet?", "output": "MAYBE"}
+{"input": "Is tomorrow going to be quiet?", "output": "NO"}
+{"input": "Will I regret after class?", "output": "NO"}
+{"input": "Am I going to pass my exam?", "output": "YES"}
+{"input": "Is someone thinking about me?", "output": "YES"}
+{"input": "Will a change happen tomorrow?", "output": "NO"}
+{"input": "Is it a good idea to go out after class?", "output": "YES"}
+{"input": "Is my parents thinking about me?", "output": "YES"}
+{"input": "Should I switch majors today?", "output": "YES"}
+{"input": "Will good news happen in the next few days?", "output": "YES"}
+{"input": "Will my next week get better?", "output": "NO"}
+{"input": "Will a change happen in the next few days?", "output": "NO"}
+{"input": "Is in the next few days going to be exciting?", "output": "YES"}
+{"input": "Will my in January get better?", "output": "MAYBE"}
+{"input": "Should I rest tomorrow?", "output": "MAYBE"}
+{"input": "Should I switch majors before bed?", "output": "MAYBE"}
+{"input": "Will I wait after class tonight?", "output": "YES"}
+{"input": "Will I regret tonight?", "output": "MAYBE"}
+{"input": "Should I take the safe route?", "output": "MAYBE"}
+{"input": "Will I regret this weekend?", "output": "NO"}
+{"input": "Should I take the bold choice?", "output": "MAYBE"}
+{"input": "Will I regret soon?", "output": "NO"}
+{"input": "Will my tomorrow get better?", "output": "NO"}
+{"input": "Will I regret after class?", "output": "NO"}
+{"input": "Is my professor thinking about me?", "output": "NO"}
+{"input": "Is it a good idea to take a risk before bed?", "output": "YES"}
+{"input": "Am I going to get good news?", "output": "MAYBE"}
+{"input": "Will my next week get better?", "output": "YES"}
+{"input": "Should I take the job?", "output": "MAYBE"}
+{"input": "Will my this weekend get better?", "output": "YES"}
+{"input": "Will I study before bed this week?", "output": "MAYBE"}
+{"input": "Will a setback happen soon?", "output": "NO"}
+{"input": "Am I going to feel better?", "output": "YES"}
+{"input": "Will I wait tomorrow next week?", "output": "MAYBE"}
+{"input": "Is it a good idea to start early tomorrow?", "output": "NO"}
+{"input": "Is my professor going to message me?", "output": "NO"}
+{"input": "Am I going to get good news?", "output": "MAYBE"}
+{"input": "Is next week going to be weird?", "output": "MAYBE"}
+{"input": "Will my before bed get better?", "output": "NO"}
+{"input": "Is soon going to be lucky?", "output": "MAYBE"}
+{"input": "Is tonight going to be exciting?", "output": "YES"}
+{"input": "Is this week going to be lucky?", "output": "NO"}
+{"input": "Should I take the bold choice?", "output": "NO"}
+{"input": "Should I text them this weekend?", "output": "NO"}
+{"input": "Am I going to feel better?", "output": "MAYBE"}
+{"input": "Should I switch majors tomorrow?", "output": "YES"}
+{"input": "Is it a good idea to apply this weekend?", "output": "NO"}
+{"input": "Will I regret soon?", "output": "NO"}
+{"input": "Should I take the new path?", "output": "YES"}
+{"input": "Should I apply this weekend?", "output": "YES"}
+{"input": "Will a change happen soon?", "output": "MAYBE"}
+{"input": "Am I going to feel better?", "output": "YES"}
+{"input": "Is it a good idea to go out soon?", "output": "MAYBE"}
+{"input": "Will a surprise happen this week?", "output": "YES"}
+{"input": "Will my after class get better?", "output": "MAYBE"}
+{"input": "Will I regret tomorrow?", "output": "NO"}
+{"input": "Is this week going to be exciting?", "output": "YES"}
+{"input": "Will my soon get better?", "output": "MAYBE"}
+{"input": "Is this week going to be lucky?", "output": "MAYBE"}
+{"input": "Will I text them tonight this week?", "output": "MAYBE"}
+{"input": "Is in the next few days going to be quiet?", "output": "YES"}
+{"input": "Should I take the bold choice?", "output": "YES"}
+{"input": "Should I take the new path?", "output": "NO"}
+{"input": "Will I study today soon?", "output": "YES"}
+{"input": "Is it a good idea to wait next week?", "output": "YES"}
