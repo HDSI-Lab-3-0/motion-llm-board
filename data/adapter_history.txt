@@ -3,3 +3,4 @@ answer-board-balanced-20260112-1316	tinker://2b21f3a0-8642-52bc-ac26-54b99dbb2cc
 answer-board-balanced-20260112-1328	tinker://ab7797ee-52bc-5a71-ad4d-8de6520505f7:train:0/sampler_weights/ADAPTER_NAME
 answer-board-balanced-20260112-1507	tinker://ed78de30-5e93-557b-9dbc-4f69d1b98acb:train:0/sampler_weights/ADAPTER_NAME
 answer-board-balanced-20260113-1648	tinker://5b58a69c-dfef-56ed-8994-6baf3caeeeae:train:0/sampler_weights/answer-board-balanced-20260113-1648
+answer-board-balanced-20260123-1137	tinker://d440e418-664f-5aa0-bab3-8ee088d3e554:train:0/sampler_weights/answer-board-balanced-20260123-1137

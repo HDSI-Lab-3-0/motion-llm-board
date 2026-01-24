@@ -33,9 +33,9 @@ def ask_board(question: str, debug_raw: bool = False) -> str:
     prompt = types.ModelInput.from_ints(tokenizer.encode(prompt_text))
 
     params = types.SamplingParams(
-        max_tokens=6,
-        temperature=0.0,
-        stop=["\n"]
+        max_tokens=4,
+        temperature=0.7,
+        stop=["\n"],
     )
 
     res = sampling_client.sample(prompt=prompt, sampling_params=params, num_samples=1).result()
