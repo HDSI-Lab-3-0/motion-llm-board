@@ -10,3 +10,10 @@ Motion "ouija" board project:
 - esp32/   : microcontroller code
 - data/    : datasets / test inputs
 
+## Speech-to-Text Dependency
+This project uses 'realtime-whisper' for live transcription.
+
+Clone separately:
+https://github.com/davabase/whisper_real_rime
+
+Run in the 'whisperenv' conda environment
