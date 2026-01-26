@@ -29,3 +29,9 @@ env/
 
 scripts/Miniconda3-latest-MacOSX-arm64.sh
 scripts/Miniconda3-latest-MacOSX-arm64.sh
+
+Miniconda3-latest-MacOSX-arm64.sh
+scripts/Miniconda3-latest-MacOSX-arm64.sh
+*.pkg
+*.dmg
+
