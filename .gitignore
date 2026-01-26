@@ -27,3 +27,5 @@ env/
 # IDE
 .vscode/
 
+scripts/Miniconda3-latest-MacOSX-arm64.sh
+scripts/Miniconda3-latest-MacOSX-arm64.sh
