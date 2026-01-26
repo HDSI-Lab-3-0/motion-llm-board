@@ -1,16 +1,19 @@
 import subprocess
 import time
 import re
+import sys
 import selectors
 from pathlib import Path
 
 # ---------- Paths / Envs ----------
-WHISPER_PY = "/opt/anaconda3/envs/whisperenv/bin/python"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+WHISPER_PY = "/Users/hanatjendrawasi/miniconda3/envs/whisperenv/bin/python"
 WHISPER_SCRIPT = str(Path.home() / "realtime-whisper" / "transcribe_demo.py")
 
-TINKER_PY = "/opt/anaconda3/envs/motion-llm/bin/python"
-TINKER_SERVER = str(Path.home() / "motion-llm-board" / "scripts" / "tinker_server.py")
-TINKER_CWD = str(Path.home() / "motion-llm-board")
+TINKER_PY = "/Users/hanatjendrawasi/miniconda3/envs/motion-llm/bin/python"
+TINKER_SERVER = str(REPO_ROOT / "scripts" / "tinker_server.py")
+TINKER_CWD = str(REPO_ROOT)
 
 # ---------- Settings ----------
 WHISPER_FINAL_RE = re.compile(r"^FINAL:\s*(.*)\s*$")

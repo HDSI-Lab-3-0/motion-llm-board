@@ -34,7 +34,7 @@ def ask_board(question: str, debug_raw: bool = False) -> str:
 
     params = types.SamplingParams(
         max_tokens=4,
-        temperature=0.7,
+        temperature=0.8,
         stop=["\n"],
     )
 
