@@ -273,3 +273,10 @@ Send this in the Serial Monitor to test motion:
 G1 X-10 Y-10 F200
 ```
 If the motors move, GRBL is working correctly.
+
+## Exeperimental Folder (Not Required)
+The experimental/ directory contains:
+- Tinker inference code
+- Training scripts
+- Early prototpyes and trials
+These are not needed to run the project and may require additional setup.
