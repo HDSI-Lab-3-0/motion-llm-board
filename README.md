@@ -39,8 +39,8 @@ motion-llm-board/
 └── .gitignore
 ```
 **Important**
-- openrouter/ is the recommended and maintained version
-- experimental/ is kept for transparency and learning purposes only
+- `openrouter/` is the recommended and maintained version
+- `experimental/` is kept for transparency and learning purposes only
 
 ---
 
@@ -275,7 +275,7 @@ G1 X-10 Y-10 F200
 If the motors move, GRBL is working correctly.
 
 ## Exeperimental Folder (Not Required)
-The experimental/ directory contains:
+The `experimental/` directory contains:
 - Tinker inference code
 - Training scripts
 - Early prototpyes and trials
