@@ -1,4 +1,4 @@
-# Spirit Board:
+# Spirit Board
 
 A physical, voice-controlled "ouija-style" board powered by a large language model (LLM). 
 
