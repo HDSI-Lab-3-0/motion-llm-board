@@ -1,4 +1,4 @@
-# motion-llm-board project:
+# Spirit Board:
 
 A physical, voice-controlled "ouija-style" board powered by a large language model (LLM). 
 
@@ -17,6 +17,8 @@ A user asks a question out loud, an LLM decides an answer, and a microcontroller
 5. Host Python script sends the result over serial 
 6. Microcontroller (Arduino) moves servos to the correct position on the board
 
+---
+
 ## Project Structure
 ```
 motion-llm-board/
@@ -26,7 +28,7 @@ motion-llm-board/
 │   ├── ouija_hardware.py
 │   └── ouija_mac.py
 │
-├── experimental/         # Experiments (not maintained)
+├── experimental/        E# Experiments (not maintained)
 │   ├── tinker/          # Tinker inference + server code
 │   ├── training/        # Dataset + training scripts
 │   └── prototypes/      # Early runner versions
@@ -35,9 +37,26 @@ motion-llm-board/
 ├── requirements.txt
 ├── README.md
 └── .gitignore
+```
+**Important**
+- openrouter/ is the recommended and maintained version
+- experimental/ is kept for transparency and learning purposes only
 
-## Speech-to-Text Dependency
-This project uses 'realtime-whisper' for live transcription.
+---
+
+## Requirements
+**Hardware**
+- Arduino (Uno/Nano/compatible)
+- Motors or servos connected to Arduino
+- USB cable
+
+**Software**
+- macOS (Apple Silicon supported)
+- Python 3.10
+- Arduino IDE (ARM64 on Apple Silicon)
+- Homebrew
+
+## Python Setup
 
 Clone separately:
 https://github.com/davabase/whisper_real_time
