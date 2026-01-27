@@ -140,5 +140,39 @@ pip install --no-binary :all: pyaudio
 ```
 
 8. Install Whisper Real-Time Dependencies
+```bash
+cd ~/realtime-whisper
+pip install -r requirements.txt
+```
 
-Run in the 'whisperenv' conda environment
+9. Test Real-Time Transcription
+```bash
+python transcribe_demo.py
+```
+For faster transcription:
+```bash
+python transcribe_demo.py --model base --record_timeout 1 --phrase_timeout 1.2 --energy_threshold 1000
+```
+If transcription works here, Whisper is correctly installed.
+
+**Microphone Permissions (macOS)**
+Go to:
+**System Settings -> Privacy & Security -> Microphone**
+Restart Terminal after enabling permissions
+
+## OpenRouter API Setup
+Create an environment variable:
+```bash 
+export OPENROUTER_API_KEY="your_api_key_here"
+```
+
+## Running the Project (OpenRouter Version)
+From the repo root:
+```bash
+python -m openrouter.runner
+```
+You should see:
+```pgsql
+[READY] Press ENTER to listen (or 'q' to quit)
+```
+Speak a question and see the response. 
