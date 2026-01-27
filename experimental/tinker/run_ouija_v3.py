@@ -10,6 +10,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 WHISPER_PY = "/Users/hanatjendrawasi/miniconda3/envs/whisperenv/bin/python"
 WHISPER_SCRIPT = str(Path.home() / "realtime-whisper" / "transcribe_demo.py")
+WHISPER_CWD = str(Path.home() / "realtime-whisper")
 
 TINKER_PY = "/Users/hanatjendrawasi/miniconda3/envs/motion-llm/bin/python"
 TINKER_SERVER = str(REPO_ROOT / "scripts" / "tinker_server.py")
@@ -147,12 +148,14 @@ def main():
     whisper = subprocess.Popen(
         [
             WHISPER_PY,
+            "-u",
             WHISPER_SCRIPT,
             "--model", "base",
             "--record_timeout", "1",
             "--phrase_timeout", "1.2",
             "--energy_threshold", "200",
         ],
+        cwd=WHISPER_CWD,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
@@ -167,14 +170,11 @@ def main():
 
         for line in whisper.stdout:
             line = line.rstrip("\n")
+            print(f"[WHISPER RAW] {line}", flush=True)
 
             # IMPORTANT: Don't print every Whisper line (it spams the full transcript)
             # Only print FINAL lines so your terminal stays clean.
-            m = WHISPER_FINAL_RE.match(line)
-            if not m:
-                continue
-
-            text = (m.group(1) or "").strip()
+            text = line.strip()
             now = time.time()
 
             # Skip empty/garbage finals
