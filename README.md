@@ -176,3 +176,100 @@ You should see:
 [READY] Press ENTER to listen (or 'q' to quit)
 ```
 Speak a question and see the response. 
+
+## Arduino GRBL Setup (28BYJ-48 Servo)
+This project uses a modified GRBL firmware to control servo/stepper motors via Arduino.
+
+1. Download the GRBL Repository
+- Go to: 
+https://github.com/ruizivo/GRBL-28byj-48-Servo
+- Click **Code -> Download ZIP**
+- Unzip the downloaded folder
+
+2. Install GRBL as an Arduino Library
+- Locate your "Arduino" folder
+- Create new folder inside named "libraries"
+- Copy the entire grbl folder from the unzipped repository into libraries
+
+3. Locate the Upload Sketch
+Inside the GRBL folder, navigate to:
+```
+grbl/
+└── examples/
+    └── grblUpload/
+        └── grblUpload.ino
+```
+This is the sketch you will upload to the Arduino
+
+4. Open and Upload the Sketch
+- Open Arduino IDE
+- Open the sketch:
+```bash
+File -> Open -> libraries/grbl/examples/grblUpload/grblUpload.ino
+```
+- Select your board:
+```scss
+Tools -> Board -> (your Arduino model)
+```
+- Select the correct port:
+```bash
+Tools -> Port -> /dev/cu.usbmodemXXXX
+```
+- Click Upload
+
+5. Required Compilation Fix (IMPORTANT)
+If the upload fails with an error related to stepper.c file:
+- Open the file
+```bash
+grbl/stepper.c
+```
+- Find this line:
+```c
+dir_outbits
+```
+- Change it to:
+```c
+step_outbits
+```
+- Save the file
+- Upload the sketch again
+This fix is required for this GRBL fork.
+
+6. Verify Arduino Connection (Serial Monitor)
+- Open:
+```arduino
+Tools -> Serial Monitor
+```
+- Set:
+**Baud rate:** 115200
+**Line ending:** New Line
+- You should see GRBL startup text or responses to commands
+
+7. Python Serial Setup
+Make sure your project's Python environment is active:
+```bash
+conda activate spirit-board
+```
+Install PySerial:
+```bash
+pip install pyserial
+```
+Verify the serial port in your Python code matches the Arduino port
+
+8. Debugging Serial Issues
+If commands return errors or nothing responds:
+- Close the Serial Monitor
+- Unplug the USB cable
+- Plug the USB cable back in
+- Reopen Serial Monitor
+- Confirm settings again:
+	Baud rate: 115200
+	Line ending: New Line
+This resets the serial connection.
+
+9. Example GRBL Command (Test Motors)
+Send this in the Serial Monitor to test motion:
+```gcode
+G1 X-10 Y-10 F200
+```
+If the motors move, GRBL is working correctly.
