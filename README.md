@@ -57,6 +57,15 @@ motion-llm-board/
 - Homebrew
 
 ## Python Setup
+1. Create a virtual environment
+```bash
+conda create -n spirit-board python=3.10 -y
+conda activate spirit-board
+```
+2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
 Clone separately:
 https://github.com/davabase/whisper_real_time
