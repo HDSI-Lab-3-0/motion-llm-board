@@ -20,13 +20,13 @@ A user asks a question out loud, an LLM decides an answer, and a microcontroller
 motion-llm-board/
 │
 ├── scripts/        # Host-side Python
-│   ├── LLM inference
-│   ├── Serial communication
-│   └── Whisper integration
+│   ├── llm/        # LLM inference
+│   ├── serial/     # Serial communication
+│   └── whisper/    # Whisper integration
 │
 ├── esp32/          # Microcontroller firmware
-│   ├── Servo control
-│   └── Serial command parsing
+│   ├── servo/      # Servo control
+│   └── protocol/  # Serial command parsing
 │
 ├── data/           # Datasets, prompts, test inputs
 │
