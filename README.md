@@ -274,7 +274,7 @@ G1 X-10 Y-10 F200
 ```
 If the motors move, GRBL is working correctly.
 
-## Exeperimental Folder (Not Required)
+## Experimental Folder (Not Required)
 The `experimental/` directory contains:
 - Tinker inference code
 - Training scripts
