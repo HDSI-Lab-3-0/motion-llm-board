@@ -67,7 +67,78 @@ conda activate spirit-board
 pip install -r requirements.txt
 ```
 
-Clone separately:
-https://github.com/davabase/whisper_real_time
+## Whisper Setup (Required for Speech-to-Text)
+This project relies on local Whisper transcription
+You must clone and set up the Whisper real-time repository separately.
+
+1. Clone the Whisper Repository:
+```bash
+cd ~
+git clone https://github.com/davabase/whisper_real_time.git realtime-whisper
+```
+
+2. Ensure You Are in the Project Environment
+Activate the same environment you use to run this project:
+```bash
+conda activate spirit-board
+```
+
+3. Install PyTorch
+```bash
+conda install pytorch -c pytorch -y
+```
+
+4. Install Whisper
+```bash
+pip install -U openai-whisper
+pip install git+https://github.com/openai/whisper.git
+pip install --upgrade --no-deps --force-reinstall git+https://github.com/openai/whisper.git
+```
+
+5. Install Homebrew (macOS only)
+If Homebrew is not installed:
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Add Homebrew to PATH
+Apple Silicon:
+```bash
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+Intel Mac:
+```bash
+echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/usr/local/bin/brew shellenv)"
+```
+
+Verify
+```bash
+uname -m
+brew --version
+```
+
+6. Install System Audio Dependencies
+```bash
+brew install ffmpeg portaudio
+```
+
+7. Install PyAudio
+Make sure your project environment is active:
+```bash
+conda activate spirit-board
+pip install pyaudio
+```
+
+If installation fails:
+```bash
+export LDFLAGS="-L$(brew --prefix portaudio)/lib"
+export CPPFLAGS="-I$(brew --prefix portaudio)/include"
+pip install --no-binary :all: pyaudio
+```
+
+8. Install Whisper Real-Time Dependencies
 
 Run in the 'whisperenv' conda environment
