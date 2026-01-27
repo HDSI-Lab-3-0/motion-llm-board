@@ -256,18 +256,7 @@ pip install pyserial
 ```
 Verify the serial port in your Python code matches the Arduino port
 
-8. Debugging Serial Issues
-If commands return errors or nothing responds:
-- Close the Serial Monitor
-- Unplug the USB cable
-- Plug the USB cable back in
-- Reopen Serial Monitor
-- Confirm settings again:
-	Baud rate: 115200
-	Line ending: New Line
-This resets the serial connection.
-
-9. Example GRBL Command (Test Motors)
+8. Example GRBL Command (Test Motors)
 Send this in the Serial Monitor to test motion:
 ```gcode
 G1 X-10 Y-10 F200
