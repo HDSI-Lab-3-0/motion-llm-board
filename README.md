@@ -94,7 +94,7 @@ motion-llm-board/
 │   ├── ouija_hardware.py
 │   └── ouija_mac.py
 │
-├── experimental/        E# Experiments (not maintained)
+├── experimental/       E# Experiments (not maintained)
 │   ├── tinker/          # Tinker inference + server code
 │   ├── training/        # Dataset + training scripts
 │   └── prototypes/      # Early runner versions
