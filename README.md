@@ -18,7 +18,73 @@ A user asks a question out loud, an LLM decides an answer, and a microcontroller
 6. Microcontroller (Arduino) moves servos to the correct position on the board
 
 ---
-
+## System Architecture
+```
+┌───────────────────────┐
+│        User           │
+│  (Speaks Question)    │
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│     Microphone        │
+└───────────┬───────────┘
+            │  audio
+            ▼
+┌───────────────────────┐
+│ Whisper (STT)         │
+│ Local Speech-to-Text  │
+└───────────┬───────────┘
+            │  text
+            ▼
+┌─────────────────────────────────────┐
+│ Algorithmic Routing Layer (Python)   │
+│                                     │
+│ • Normalizes question               │
+│ • Applies keyword + rule heuristics │
+│ • Decides if LLM is needed          │
+└───────────┬─────────────────────────┘
+            │
+            ▼
+┌─────────────────────────────────────┐
+│ OpenRouter API (LLM)                 │
+│                                     │
+│ Used ONLY for:                      │
+│ • Classifying question type         │
+│   → YES / NO / MAYBE                │
+│   → ONE WORD                        │
+│                                     │
+│ (No free-form generation)           │
+└───────────┬─────────────────────────┘
+            │  classified output
+            ▼
+┌─────────────────────────────────────┐
+│ Decision Layer (Host Python)         │
+│                                     │
+│ • Enforces one-word constraint      │
+│ • Selects final response token      │
+│ • Validates allowed outputs         │
+└───────────┬─────────────────────────┘
+            │  command
+            ▼
+┌───────────────────────┐
+│ Serial Communication  │
+│ (USB / PySerial)      │
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│ Arduino + GRBL        │
+│ Motor Control Logic   │
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│ Physical Spirit Board │
+│ (Motors / Servos)     │
+│ Displays Response     │
+└───────────────────────┘
+```
 ## Project Structure
 ```
 motion-llm-board/
