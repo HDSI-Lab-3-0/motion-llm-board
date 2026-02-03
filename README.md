@@ -1,98 +1,103 @@
-# Spirit Board
+# Ouija Board on Raspberry Pi 4
 
-A physical, voice-controlled "ouija-style" board powered by a large language model (LLM). 
+**Speech -> LLM -> Physical motion**
 
-This project connects speech -> language models -> physical motion.
-A user asks a question out loud, an LLM decides an answer, and a microcontroller moves servos on a physical board to indicate that response.
+A voice-controlled, LLM-driven "ouija-style" board running on a Raspberry Pi 4, combining local speech-to-text with a cloud-based large language model to drive physical motion.
 
-## What This Project Does
-1. User presses ENTER and speaks a question
-2. Whisper performs real-time speech-to-text
-3. The question is sent to an LLM (OpenRouter API)
-4. LLM reasoning layer decides an output
-   - YES
-   - NO
-   - MAYBE
+## Overview
+This project connects real-time speech iinput to a physical system using a hybrid edge-and-cloud AI pipeline.
+
+Speech is transcribed locally on the Raspberry Pi using **whisper.cpp**.
+The resulting text is then classified by a large language model (LLM) to determine how the board should respond.
+That decision is translated into physical movement via serial-controlled motors.
+
+The LLM is an active part of the system's decision-making pipeline.
+
+## What This System Does
+1. User presses **ENTER** and speaks a question aloud
+2. Audio is captured from a **USB microphone**
+3. **whisper.cpp** performs local speech-to-text transcription
+4. The transcribed question is sent to a **large language model (LLM)
+5. The LLM reasoning layer decides an output
+   - YES / NO / MAYBE
    - ONE WORD
-5. Host Python script sends the result over serial 
-6. Microcontroller (Arduino) moves servos to the correct position on the board
+6. The Raspberry Pi translates the LLM's decision into serial commands 
+7. An Arduino drives motors that move a physical pointer on the board
 
 ---
 ## System Architecture
 ```
-┌───────────────────────┐
-│        User           │
-│  (Speaks Question)    │
-└───────────┬───────────┘
-            │
-            ▼
-┌───────────────────────┐
-│     Microphone        │
-└───────────┬───────────┘
-            │  audio
-            ▼
-┌───────────────────────┐
-│ Whisper (STT)         │
-│ Local Speech-to-Text  │
-└───────────┬───────────┘
-            │  text
-            ▼
-┌─────────────────────────────────────┐
-│ Algorithmic Routing Layer (Python)   │
-│                                     │
-│ • Normalizes question               │
-│ • Applies keyword + rule heuristics │
-│ • Decides if LLM is needed          │
-└───────────┬─────────────────────────┘
-            │
-            ▼
-┌─────────────────────────────────────┐
-│ OpenRouter API (LLM)                 │
-│                                     │
-│ Used ONLY for:                      │
-│ • Classifying question type         │
-│   → YES / NO / MAYBE                │
-│   → ONE WORD                        │
-│                                     │
-│ (No free-form generation)           │
-└───────────┬─────────────────────────┘
-            │  classified output
-            ▼
-┌─────────────────────────────────────┐
-│ Decision Layer (Host Python)         │
-│                                     │
-│ • Enforces one-word constraint      │
-│ • Selects final response token      │
-│ • Validates allowed outputs         │
-└───────────┬─────────────────────────┘
-            │  command
-            ▼
-┌───────────────────────┐
-│ Serial Communication  │
-│ (USB / PySerial)      │
-└───────────┬───────────┘
-            │
-            ▼
-┌───────────────────────┐
-│ Arduino + GRBL        │
-│ Motor Control Logic   │
-└───────────┬───────────┘
-            │
-            ▼
-┌───────────────────────┐
-│ Physical Spirit Board │
-│ (Motors / Servos)     │
-│ Displays Response     │
-└───────────────────────┘
+┌────────────┐
+│    User    │
+└─────┬──────┘
+      │  speaks
+      ▼
+┌────────────┐
+│ Microphone │
+│  (USB)     │
+└─────┬──────┘
+      │  audio stream
+      ▼
+┌──────────────────────┐
+│   Raspberry Pi 4     │
+│  (System Controller)│
+└─────┬────────────────┘
+      │
+      ▼
+┌──────────────────────┐
+│     whisper.cpp      │
+│  Local Speech-to-Text│
+└─────┬────────────────┘
+      │  transcribed text
+      ▼
+┌──────────────────────────────┐
+│ Algorithmic Routing Layer    │
+│ (Python orchestration logic) │
+└─────┬────────────────────────┘
+      │  structured prompt
+      ▼
+┌──────────────────────────────┐
+│ OpenRouter API               │
+│ Large Language Model (LLM)   │
+│ Question Type Classification│
+└─────┬────────────────────────┘
+      │  response mode
+      ▼
+┌──────────────────────────────┐
+│ Decision Layer (Host Python) │
+│ • Enforces output constraints│
+│ • Selects final response     │
+│ • Produces control token     │
+└─────┬────────────────────────┘
+      │  serial command
+      ▼
+┌──────────────────────────────┐
+│ Serial Communication         │
+│ (USB / pyserial)             │
+└─────┬────────────────────────┘
+      │
+      ▼
+┌──────────────────────────────┐
+│ Arduino / ESP32              │
+│ GRBL Motor Control Logic     │
+└─────┬────────────────────────┘
+      │  motor signals
+      ▼
+┌──────────────────────────────┐
+│ Physical Board               │
+│ Motors / Servos              │
+│ Visual Response Display      │
+└──────────────────────────────┘
+
 ```
 ## Project Structure
 ```
 motion-llm-board/
 │
 ├── openrouter/           # STABLE VERSION
-│   ├── runner.py        # Main entry point
+│   ├ pi_runner.py        # Main entry point
 │   ├── ouija_hardware.py
-│   └── ouija_mac.py
+│   └ pi_whispercpp_v4.py
 │
 ├── experimental/       E# Experiments (not maintained)
 │   ├── tinker/          # Tinker inference + server code
@@ -112,21 +117,28 @@ motion-llm-board/
 
 ## Requirements
 **Hardware**
+- Raspberry Pi 4
+- USB microphone
 - Arduino (Uno/Nano/compatible)
 - Motors or servos connected to Arduino
 - USB cable
+- Physical board
 
 **Software**
-- macOS (Apple Silicon supported)
+- Raspberry Pi OS (64-bit)
 - Python 3.10
+- whisper.cpp
+- ALSA (arecord)
+- Openrouter LLM
+- pyserial
 - Arduino IDE (ARM64 on Apple Silicon)
 - Homebrew
 
 ## Python Setup
 1. Create a virtual environment
 ```bash
-conda create -n spirit-board python=3.10 -y
-conda activate spirit-board
+conda create -n ouija-board python=3.10 -y
+conda activate ouija-board
 ```
 2. Install dependencies
 ```bash
