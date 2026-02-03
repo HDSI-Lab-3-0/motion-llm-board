@@ -112,7 +112,6 @@ motion-llm-board/
 │
 ├── requirements.txt           # Python dependencies (Pi)
 ├── README.md                  # Project overview + architecture
-├── README_PI.md               # Raspberry Pi setup guide
 ├── .gitignore
 
 ```
@@ -137,9 +136,31 @@ motion-llm-board/
 - whisper.cpp
 - ALSA (arecord)
 - Openrouter LLM
-- pyserial
-- Arduino IDE (ARM64 on Apple Silicon)
-- Homebrew
+
+## System Dependencies (APT)
+Update system packages first:
+```bash 
+sudo apt update && sudo apt upgrade -y
+```
+Install required build + audiio tools:
+```bash
+sudo apt install -y \
+  git wget curl \
+  build-essential cmake pkg-config \
+  alsa-utils ffmpeg \
+  libasound2-dev
+```
+Install Miniconda (ARM64)
+Download Miniconda for **Linux aarch64**:
+```bash
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
+bash Miniconda3-latest-Linux-aarch64.sh
+```
+Activate conda:
+```bash
+source ~/.bashrc
+conda --version
+```
 
 ## Python Setup
 1. Create a virtual environment
@@ -147,120 +168,66 @@ motion-llm-board/
 conda create -n ouija-board python=3.10 -y
 conda activate ouija-board
 ```
-2. Install dependencies
+2. Install Requirements
+Install project dependencies
 ```bash
 pip install -r requirements.txt
 ```
+If you get audio-related build errors (common on Pi), install these and retry:
+```bash
+sudo apt install -y python3-dev portaudio19-dev
+```
 
-## Whisper Setup (Required for Speech-to-Text)
-This project relies on local Whisper transcription
+## Set OpenRouter API Key (Required for LLM Classification)
+This project uses OpenRouter for the LLM classification layer.
+```bash
+export OPENROUTER_API_KEY="YOUR_KEY"
+```
+
+## whisper.cpp Setup (Local Speech-to-Text)
+This project uses `whisper.cpp` for local transcription on the Pi.
 You must clone and set up the Whisper real-time repository separately.
 
 1. Clone the Whisper Repository:
+From home:
 ```bash
 cd ~
-git clone https://github.com/davabase/whisper_real_time.git realtime-whisper
+git clone https://github.com/ggml-org/whisper.cpp.git
+cd whisper.cpp
 ```
-
-2. Ensure You Are in the Project Environment
-Activate the same environment you use to run this project:
+Build (recommended):
 ```bash
-conda activate spirit-board
+make -j2
 ```
 
-3. Install PyTorch
+2. Download a Whisper Model
+From the whisper.cpp folder:
 ```bash
-conda install pytorch -c pytorch -y
+cd ~/whisper.cpp/models
+bash ./download-ggml-model.sh tiny.en
 ```
-
-4. Install Whisper
+Confirm:
 ```bash
-pip install -U openai-whisper
-pip install git+https://github.com/openai/whisper.git
-pip install --upgrade --no-deps --force-reinstall git+https://github.com/openai/whisper.git
+ls -lh ggml-tiny.en.bin
 ```
 
-5. Install Homebrew (macOS only)
-If Homebrew is not installed:
+## Microphone Setup (ALSA)
+List recording devices:
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+arecord -l
 ```
-
-Add Homebrew to PATH
-Apple Silicon:
-```bash
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-eval "$(/opt/homebrew/bin/brew shellenv)"
+You'll see something like:
+```arduino
+card 3: USB Audio [USB Audio], device 0: USB Audio 
 ```
-
-Intel Mac:
-```bash
-echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
-eval "$(/usr/local/bin/brew shellenv)"
+This maps to:
+```makefile
+plughw:3,0
 ```
-
-Verify
-```bash
-uname -m
-brew --version
+Set it in `openrouter/pi_whispercpp_v4.py`:
+```python
+USB_MIC_ALSA = "plughw:3,0"
 ```
-
-6. Install System Audio Dependencies
-```bash
-brew install ffmpeg portaudio
-```
-
-7. Install PyAudio
-Make sure your project environment is active:
-```bash
-conda activate spirit-board
-pip install pyaudio
-```
-
-If installation fails:
-```bash
-export LDFLAGS="-L$(brew --prefix portaudio)/lib"
-export CPPFLAGS="-I$(brew --prefix portaudio)/include"
-pip install --no-binary :all: pyaudio
-```
-
-8. Install Whisper Real-Time Dependencies
-```bash
-cd ~/realtime-whisper
-pip install -r requirements.txt
-```
-
-9. Test Real-Time Transcription
-```bash
-python transcribe_demo.py
-```
-For faster transcription:
-```bash
-python transcribe_demo.py --model base --record_timeout 1 --phrase_timeout 1.2 --energy_threshold 1000
-```
-If transcription works here, Whisper is correctly installed.
-
-**Microphone Permissions (macOS)**
-Go to:
-**System Settings -> Privacy & Security -> Microphone**
-Restart Terminal after enabling permissions
-
-## OpenRouter API Setup
-Create an environment variable:
-```bash 
-export OPENROUTER_API_KEY="your_api_key_here"
-```
-
-## Running the Project (OpenRouter Version)
-From the repo root:
-```bash
-python -m openrouter.runner
-```
-You should see:
-```pgsql
-[READY] Press ENTER to listen (or 'q' to quit)
-```
-Speak a question and see the response. 
 
 ## Arduino GRBL Setup (28BYJ-48 Servo)
 This project uses a modified GRBL firmware to control servo/stepper motors via Arduino.
@@ -347,6 +314,13 @@ Send this in the Serial Monitor to test motion:
 G1 X-10 Y-10 F200
 ```
 If the motors move, GRBL is working correctly.
+
+## Running the Project
+From the repo:
+```bash
+cd ~/motion-llm-board
+conda activate ouija-board
+python openrouter.pi_runner
 
 ## Experimental Folder (Not Required)
 The `experimental/` directory contains:
