@@ -94,20 +94,27 @@ The LLM is an active part of the system's decision-making pipeline.
 ```
 motion-llm-board/
 │
-├── openrouter/           # STABLE VERSION
-│   ├ pi_runner.py        # Main entry point
-│   ├── ouija_hardware.py
-│   └ pi_whispercpp_v4.py
+├── openrouter/                # Stable Raspberry Pi implementation
+│   │
+│   ├── pi_runner.py           # Main entry point (Pi runtime)
+│   ├── pi_whispercpp_v4.py    # Local STT + VAD (whisper.cpp)
+│   ├── ouija_hardware.py      # Serial → motor control interface
+│   │
+│   └── __init__.py
 │
-├── experimental/       E# Experiments (not maintained)
-│   ├── tinker/          # Tinker inference + server code
-│   ├── training/        # Dataset + training scripts
-│   └── prototypes/      # Early runner versions
+├── experimental/              # Experimental / research code (not maintained)
+│   │
+│   ├── tinker/                # Tinker LLM inference + server experiments
+│   ├── training/              # Datasets + fine-tuning scripts
+│   └── prototypes/            # Early runner versions and throwaway tests
 │
-├── data/                # Prompts, logs, test inputs
-├── requirements.txt
-├── README.md
-└── .gitignore
+├── data/                      # Prompts, logs, test inputs
+│
+├── requirements.txt           # Python dependencies (Pi)
+├── README.md                  # Project overview + architecture
+├── README_PI.md               # Raspberry Pi setup guide
+├── .gitignore
+
 ```
 **Important**
 - `openrouter/` is the recommended and maintained version
