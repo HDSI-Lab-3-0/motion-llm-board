@@ -78,16 +78,16 @@ The LLM is an active part of the system's decision-making pipeline.
       │
       ▼
 ┌──────────────────────────────┐
-│ Arduino / ESP32              │
+│ Arduino/ESP32)              │
 │ GRBL Motor Control Logic     │
 └─────┬────────────────────────┘
       │  motor signals
       ▼
-┌──────────────────────────────┐
-│ Physical Board               │
-│ Motors / Servos              │
-│ Visual Response Display      │
-└──────────────────────────────┘
+┌────────────────────────┐
+│ Hidden Magnet (Under)  │
+│ + Surface Pointer      │
+│ (Magnetic Coupling)    │
+└───────────────────────
 
 ```
 ## Project Structure
@@ -128,6 +128,7 @@ motion-llm-board/
 - Arduino (Uno/Nano/compatible)
 - Motors or servos connected to Arduino
 - USB cable
+- Magnet
 - Physical board
 
 **Software**
