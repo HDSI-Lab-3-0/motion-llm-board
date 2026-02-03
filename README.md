@@ -110,7 +110,7 @@ motion-llm-board/
 │
 ├── data/                      # Prompts, logs, test inputs
 │
-├── requirements.txt           # Python dependencies (Pi)
+├── requireme-pints.txt           # Python dependencies (Pi)
 ├── README.md                  # Project overview + architecture
 ├── .gitignore
 
@@ -171,7 +171,7 @@ conda activate ouija-board
 2. Install Requirements
 Install project dependencies
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-pi.txt
 ```
 If you get audio-related build errors (common on Pi), install these and retry:
 ```bash
