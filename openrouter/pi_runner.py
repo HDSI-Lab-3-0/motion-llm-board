@@ -4,8 +4,8 @@ import json
 import random
 import requests
 
-from ouija_hardware import OuijaHardware
-from openrouter.pi_whispercpp import listen_question_near_realtime
+from openrouter.ouija_hardware import OuijaHardware
+from openrouter.pi_whispercpp_v4 import listen_question_near_realtime
 
 # =====================================================
 # CONFIG
@@ -171,8 +171,11 @@ def main():
             try:
                 text = listen_question_near_realtime(
                     max_seconds=12.0,
-                    chunk_s=1.6,
+                    chunk_s=1.0,
                     silence_chunks_to_stop=2,
+                    calibrate_chunks=2,
+                    min_speech_chunks=1,
+                    debug_rms=True
                 )
             except Exception as e:
                 print(f"[MIC ERROR] {e}")
