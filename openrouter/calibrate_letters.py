@@ -49,7 +49,7 @@ def main():
     args = ap.parse_args()
 
     hw = OuijaHardware(
-        port=args.port or "/dev/cu.usbmodem1101",  # default fallback
+        port=args.port or "/dev/ttyACM0",  # default fallback
         baud=args.baud,
     )
 
