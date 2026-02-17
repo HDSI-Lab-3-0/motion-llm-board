@@ -19,7 +19,7 @@ import time
 # from openrouter.ouija_hardware import OuijaHardware, MAP
 
 # If you're literally pasting this in the same file as the class, you can remove the import.
-from openrouter.ouija_hardware import OuijaHardware  # <-- change if needed
+from ouija_hardware import OuijaHardware  # <-- change if needed
 
 
 def print_help():
