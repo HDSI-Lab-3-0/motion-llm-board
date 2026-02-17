@@ -1,247 +1,180 @@
 # openrouter/wordbanks.py
 """
-Centralized word banks + keyword triggers for the Ouija board.
+Centralized word banks for the Ouija board.
+Add words here without touching pi_runner logic.
 
-- WORD_BANKS: category -> list of output words/phrases (keep outputs short for spelling)
-- KEYWORDS: category -> list of keyword triggers found in user question
-
-Add categories freely:
-1) Add a new entry in WORD_BANKS
-2) Add a matching entry in KEYWORDS (optional but recommended)
+All words should be short-ish and UPPERCASE because the board spells them.
 """
 
-# Output tokens for YES/NO/MAYBE mode
 YES_NO_MAYBE = ["YES", "NO", "MAYBE"]
 
+# -----------------------------
+# FOOD (NO DRINKS IN HERE)
+# -----------------------------
+FOOD_WORDS = [
+    "RAMEN", "PASTA", "RICE", "SOUP", "SALAD", "SUSHI", "TOAST",
+    "BURRITO", "TACOS", "PIZZA", "CURRY", "NOODLES", "SANDWICH",
+    "DUMPLINGS", "PHO", "BIBIMBAP", "UDON", "POKE", "BENTO",
+    "BAGEL", "OMELET", "PANCAKES", "WAFFLES", "AVOCADO",
+    "KIMCHI", "FRIEDRICE", "STIRFRY", "BULGOGI", "KATSU",
+    "SHAKSHUKA", "RISOTTO", "GNOCCHI", "LASAGNA", "TORTELLINI",
+    "BURGER", "FRIES", "NUGGETS", "WINGS", "STEAK",
+    "SALMON", "TUNA", "SHRIMP", "LOBSTER", "CRAB",
+    "SAMOSA", "BIRYANI", "TIKKA", "DAL", "NAAN",
+    "PAELLA", "TAPAS", "GYRO", "FALAFEL", "HUMMUS",
+    "KBBQ", "HOTDOG", "CHILI", "BBQ", "QUESADILLA",
+    "NACHOS", "ENCHILADA", "TAMAL", "POZOLE",
+    "FRUIT", "YOGURT", "GRANOLA", "OATMEAL",
+    "ICECREAM", "COOKIE", "BROWNIE", "DONUT"
+]
 
-# ---------------------------
-# Word banks (OUTPUTS)
-# ---------------------------
-WORD_BANKS = {
-    # --- general fallback ---
-    "generic": [
-        "WAIT", "TRUST", "GO", "STAY", "LISTEN", "RELAX",
-        "FOCUS", "GROW", "HEAL", "PAUSE", "MOVE", "CHOOSE",
-        "BREATHE", "RESET", "ALLOW", "NOTICE", "ACCEPT", "SHIFT",
-    ],
+# -----------------------------
+# DRINKS
+# -----------------------------
+DRINK_WORDS = [
+    "WATER", "MATCHA", "COFFEE", "TEA", "LATTE",
+    "JUICE", "SMOOTHIE", "BOBA", "SODA",
+    "LEMONADE", "ICETEA", "ESPRESSO", "CAPPUCCINO",
+    "MOCHA", "CHAI", "MILK", "COCONUT", "SPARKLING"
+]
 
-    # --- actions / routines ---
-    "actions": [
-        "SLEEP", "REST", "WALK", "TEXT", "STUDY", "BREATHE",
-        "WRITE", "CLEAN", "STRETCH", "SHOWER", "PLAN",
-        "READ", "DANCE", "CREATE", "RESET", "EAT", "DRINK",
-        "CALL", "LEAVE", "RETURN", "BEGIN", "FINISH",
-    ],
+# -----------------------------
+# ACTION / GENERAL
+# -----------------------------
+ACTION_WORDS = [
+    "SLEEP", "REST", "WALK", "TEXT", "STUDY", "BREATHE",
+    "WRITE", "CLEAN", "STRETCH", "SHOWER", "PLAN",
+    "READ", "DANCE", "CREATE", "RESET", "CALL",
+    "EAT", "DRINK", "JOURNAL", "MEDITATE", "MOVE",
+    "RUN", "HIKE", "COOK", "ORGANIZE", "FINISH",
+    "BEGIN", "RETURN", "LEAVE", "PAUSE", "LISTEN"
+]
 
-    # --- food / drink ---
-    "food": [
-        "RAMEN", "PASTA", "RICE", "SOUP", "SALAD", "SUSHI", "TOAST",
-        "BURRITO", "TACOS", "PIZZA", "CURRY", "NOODLES", "SANDWICH",
-        "DUMPLINGS", "PHO", "BIBIMBAP", "UDON", "POKE",
-        "FRUIT", "YOGURT", "COFFEE", "TEA", "SMOOTHIE",
-        "BAGEL", "BOWL", "KIMCHI", "BENTO", "OMELET", "MATCHA",
-    ],
+GENERIC_WORDS = [
+    "WAIT", "TRUST", "GO", "STAY", "LISTEN", "RELAX",
+    "FOCUS", "GROW", "HEAL", "PAUSE", "MOVE", "CHOOSE",
+    "ALLOW", "NOTICE", "SHIFT", "ACCEPT", "SOFTEN",
+    "BOLD", "CALM", "STEADY", "QUIET", "START"
+]
 
-    # --- relationships / dating / social ---
-    "relationships": [
-        "HONESTY", "BOUNDARIES", "APOLOGY", "CLOSURE",
-        "PATIENCE", "LOYALTY", "SPACE", "CLARITY",
-        "TRUST", "LISTEN", "RESPECT", "FORGIVE", "SOFTEN",
-        "ASK", "SAYIT", "CHECKIN", "CARE", "GENTLE",
-    ],
+# -----------------------------
+# RELATIONSHIPS / SOCIAL
+# -----------------------------
+RELATIONSHIP_WORDS = [
+    "HONESTY", "BOUNDARIES", "APOLOGY", "CLOSURE",
+    "PATIENCE", "LOYALTY", "SPACE", "CLARITY",
+    "TRUST", "RESPECT", "LISTEN", "GENTLE",
+    "CHECKIN", "COMMUNICATE", "ASK", "FORGIVE",
+    "HEART", "CARE", "TRUTH", "SOFTEN"
+]
 
-    # --- school / work / productivity ---
-    "school_work": [
-        "START", "REVISE", "SUBMIT", "OUTLINE",
-        "PRACTICE", "EMAIL", "DEADLINE",
-        "FOCUS", "PRIORITY", "DRAFT", "PLAN", "SCHEDULE",
-        "BREAK", "REVIEW", "SOLVE", "SHIP", "CLEANUP",
-    ],
+COMMUNICATION_WORDS = [
+    "CLARIFY", "ASK", "LISTEN", "SPEAK",
+    "PAUSE", "REPAIR", "HONESTY", "KIND",
+    "CHECKIN", "RESPOND", "EXPLAIN", "TRUTH"
+]
 
-    # --- anxiety / stress / emotional state ---
-    "anxiety": [
-        "BREATHE", "GROUND", "SLOW", "EASE",
-        "SOFTEN", "RELEASE", "LETGO", "SAFE",
-        "CALM", "STEADY", "PAUSE", "REST",
-        "KIND", "OKAY", "GENTLE", "QUIET",
-    ],
+FAMILY_WORDS = [
+    "CALL", "VISIT", "LISTEN", "PATIENT",
+    "KIND", "HOME", "RESPECT", "BOUNDARY",
+    "FORGIVE", "CARE", "CHECKIN"
+]
 
-    # --- confidence / courage / self-worth ---
-    "confidence": [
-        "BRAVE", "WORTHY", "TRUSTME", "RISE",
-        "SPEAK", "OWNIT", "BOLD", "SHINE",
-        "PROUD", "CAPABLE", "BELIEVE", "YES",
-        "MOVE", "TRY", "BEGIN", "DOIT",
-    ],
+BOUNDARY_WORDS = [
+    "NO", "BOUNDARY", "PROTECT", "CLARITY",
+    "TRUTH", "CHOOSE", "SELF", "PAUSE",
+    "ASK", "HONOR", "RESPECT"
+]
 
-    # --- health / body / recovery ---
-    "health": [
-        "HYDRATE", "SLEEP", "WALK", "STRETCH",
-        "REST", "NOURISH", "BREATH", "CARE",
-        "HEAL", "RECOVER", "BALANCE", "EASE",
-        "CHECKUP", "SUNLIGHT",
-    ],
+# -----------------------------
+# SCHOOL / WORK / PRODUCTIVITY
+# -----------------------------
+SCHOOL_WORK_WORDS = [
+    "START", "REVISE", "SUBMIT", "OUTLINE",
+    "PRACTICE", "EMAIL", "DEADLINE",
+    "DRAFT", "FOCUS", "PLAN", "SCHEDULE",
+    "REVIEW", "SOLVE", "BUILD", "SHIP",
+    "CLEANUP", "PRIORITY", "ORGANIZE"
+]
 
-    # --- fitness / movement / sports ---
-    "fitness": [
-        "PILATES", "YOGA", "RUN", "LIFT",
-        "SURF", "HIKE", "SWIM", "CORE",
-        "MOBILITY", "STRETCH", "RECOVER",
-        "CARDIO", "FLOW", "TRAIN",
-    ],
+CAREER_WORDS = [
+    "APPLY", "NETWORK", "PORTFOLIO", "INTERVIEW",
+    "BUILD", "PIVOT", "LEARN", "CHOOSE",
+    "CLARITY", "FOCUS", "TRY", "EXPLORE",
+    "DRAFT", "SHIP", "ASK", "FOLLOWUP"
+]
 
-    # --- money / finance ---
-    "money": [
-        "BUDGET", "SAVE", "INVEST", "PLAN",
-        "CUTBACK", "TRACK", "FOCUS", "BUILD",
-        "ASK", "NEGOTIATE", "WAIT", "LEARN",
-        "GROW", "SECURE",
-    ],
+TECH_WORDS = [
+    "RESTART", "UPDATE", "DEBUG", "CHECKLOG",
+    "RETRY", "CONFIG", "PORT", "SERIAL",
+    "INSTALL", "IMPORT", "FIX", "PUSH",
+    "PULL", "COMMIT", "BRANCH", "MERGE"
+]
 
-    # --- career / decisions / future ---
-    "career": [
-        "APPLY", "BUILD", "PORTFOLIO", "NETWORK",
-        "LEARN", "PIVOT", "COMMIT", "CHOOSE",
-        "CLARITY", "FOCUS", "TRY", "EXPLORE",
-        "ASK", "DRAFT", "SHIP",
-    ],
+# -----------------------------
+# MENTAL / EMOTIONAL
+# -----------------------------
+ANXIETY_WORDS = [
+    "BREATHE", "GROUND", "SLOW", "EASE",
+    "SOFTEN", "RELEASE", "LETGO", "SAFE",
+    "CALM", "STEADY", "PAUSE", "REST",
+    "KIND", "OKAY", "QUIET", "GENTLE"
+]
 
-    # --- creativity / art / music ---
-    "creativity": [
-        "CREATE", "SKETCH", "PLAY", "SING",
-        "WRITE", "DRAW", "PAINT", "DESIGN",
-        "JAM", "IMPROVISE", "PRACTICE", "BUILD",
-        "MAKE", "DREAM",
-    ],
+CONFIDENCE_WORDS = [
+    "BRAVE", "WORTHY", "BELIEVE", "RISE",
+    "SPEAK", "OWNIT", "BOLD", "SHINE",
+    "PROUD", "CAPABLE", "YES", "DOIT",
+    "TRY", "BEGIN", "MOVE", "TRUSTME"
+]
 
-    # --- travel / adventure ---
-    "travel": [
-        "GO", "BOOK", "PLAN", "EXPLORE",
-        "WANDER", "ADVENTURE", "MAP", "PACK",
-        "OCEAN", "MOUNTAIN", "CITY", "SUN",
-        "LEAVE", "RETURN",
-    ],
+REFLECTION_WORDS = [
+    "JOURNAL", "REFLECT", "NOTICE", "WHY",
+    "TRUTH", "CLARITY", "SILENCE", "LISTEN",
+    "MEANING", "LESSON", "SHIFT", "ACCEPT"
+]
 
-    # --- family / home ---
-    "family": [
-        "CALL", "VISIT", "LISTEN", "FORGIVE",
-        "RESPECT", "PATIENT", "HOME", "CARE",
-        "BOUNDARY", "KIND", "CHECKIN",
-    ],
+LUCK_WORDS = [
+    "MAYBE", "WAIT", "TRY", "AGAIN",
+    "LATER", "RISK", "CAREFUL", "ODDS",
+    "TRUST", "SHIFT"
+]
 
-    # --- conflict / communication ---
-    "communication": [
-        "SPEAK", "LISTEN", "ASK", "CLARIFY",
-        "REPAIR", "APOLOGIZE", "PAUSE", "RESPOND",
-        "HONESTY", "BOUNDARY", "CALM", "KIND",
-    ],
+# -----------------------------
+# HEALTH / FITNESS / LIFE
+# -----------------------------
+HEALTH_WORDS = [
+    "HYDRATE", "SLEEP", "REST", "STRETCH",
+    "NOURISH", "SUNLIGHT", "BREATHE", "CARE",
+    "HEAL", "RECOVER", "BALANCE", "EASE"
+]
 
-    # --- sleep / rest ---
-    "sleep": [
-        "SLEEP", "REST", "UNPLUG", "QUIET",
-        "WINDDOWN", "TEA", "DARK", "CALM",
-        "BREATHE", "STRETCH",
-    ],
+FITNESS_WORDS = [
+    "YOGA", "PILATES", "HIKE", "RUN",
+    "SURF", "SWIM", "LIFT", "CORE",
+    "FLOW", "MOBILITY", "TRAIN", "MOVE"
+]
 
-    # --- weather (one-word outputs if it ever routes here) ---
-    # You can keep this minimal; ideally weather should be YES/NO/MAYBE or real lookup later.
-    "weather": [
-        "SUN", "CLOUD", "RAIN", "WIND", "CLEAR",
-        "COOL", "WARM", "CHILL", "STORM", "FOG",
-    ],
+MONEY_WORDS = [
+    "BUDGET", "SAVE", "TRACK", "PLAN",
+    "BUILD", "SECURE", "CUTBACK", "LEARN",
+    "GROW", "WAIT", "FOCUS", "NEGOTIATE"
+]
 
-    # --- tech / coding / debugging ---
-    "tech": [
-        "RESTART", "UPDATE", "DEBUG", "CHECKLOG",
-        "REINSTALL", "RETRY", "CONFIG", "PORT",
-        "COMMIT", "PUSH", "PULL", "FIX",
-    ],
+TRAVEL_WORDS = [
+    "GO", "BOOK", "PLAN", "PACK",
+    "EXPLORE", "WANDER", "ADVENTURE",
+    "OCEAN", "MOUNTAIN", "CITY", "SUN"
+]
 
-    # --- luck / chance / gambling vibes ---
-    "luck": [
-        "MAYBE", "WAIT", "RISK", "TRY",
-        "AGAIN", "LATER", "TRUST", "SHIFT",
-        "ODDS", "CAREFUL",
-    ],
+CREATIVITY_WORDS = [
+    "CREATE", "SKETCH", "WRITE", "DRAW",
+    "PAINT", "DESIGN", "PLAY", "JAM",
+    "IMPROVISE", "MAKE", "DREAM", "BUILD"
+]
 
-    # --- boundaries / people-pleasing / self-advocacy ---
-    "boundaries": [
-        "NO", "BOUNDARY", "ASK", "PAUSE",
-        "CHOOSE", "SELF", "CLARITY",
-        "PROTECT", "HONOR", "TRUTH",
-    ],
-
-    # --- journaling / reflection ---
-    "reflection": [
-        "JOURNAL", "NOTICE", "WHY", "WRITE",
-        "REFLECT", "BREATHE", "SILENCE", "TRUTH",
-        "CLARITY", "LISTEN",
-    ],
-}
-
-
-# ---------------------------
-# Keyword triggers (INPUTS)
-# ---------------------------
-# These are substring checks against the lowercased question.
-# Keep them broad and forgiving because Whisper can be messy.
-KEYWORDS = {
-    "food": [
-        "eat", "food", "hungry", "dinner", "lunch", "breakfast", "snack", "cook", "restaurant", "meal", "drink", "coffee", "tea"
-    ],
-    "relationships": [
-        "love", "date", "crush", "relationship", "text", "boyfriend", "girlfriend", "partner", "breakup", "miss", "talk", "ghost"
-    ],
-    "school_work": [
-        "study", "exam", "class", "work", "job", "assignment", "homework", "project", "resume", "interview", "deadline"
-    ],
-    "anxiety": [
-        "anxious", "anxiety", "panic", "overthink", "stressed", "stress", "worry", "scared", "cry", "sad"
-    ],
-    "confidence": [
-        "confident", "confidence", "brave", "courage", "self worth", "insecure", "imposter", "fear"
-    ],
-    "health": [
-        "health", "sick", "hurt", "pain", "injury", "ankle", "headache", "doctor", "hospital", "recover"
-    ],
-    "fitness": [
-        "workout", "gym", "run", "lift", "yoga", "pilates", "surf", "hike", "cardio", "stretch"
-    ],
-    "money": [
-        "money", "broke", "budget", "save", "spend", "rent", "pay", "salary", "credit", "debt"
-    ],
-    "career": [
-        "career", "major", "intern", "internship", "apply", "application", "linkedin", "job", "offer"
-    ],
-    "creativity": [
-        "creative", "draw", "art", "music", "guitar", "piano", "write", "paint", "design"
-    ],
-    "travel": [
-        "travel", "trip", "vacation", "flight", "hotel", "beach", "nyc", "cabo", "mexico", "japan"
-    ],
-    "family": [
-        "mom", "dad", "parents", "family", "cousin", "home", "sister", "brother"
-    ],
-    "communication": [
-        "communicate", "conversation", "talk", "say", "tell", "message", "text", "explain", "misunderstand"
-    ],
-    "sleep": [
-        "sleep", "tired", "insomnia", "nap", "rest", "bed", "dream"
-    ],
-    "weather": [
-        "weather", "rain", "raining", "sunny", "cloudy", "windy", "forecast", "temperature", "temp", "storm", "fog", "cold", "hot"
-    ],
-    "tech": [
-        "python", "error", "bug", "debug", "install", "module", "import", "raspberry", "arduino", "serial", "port", "github", "git"
-    ],
-    "luck": [
-        "luck", "lucky", "chance", "bet", "gamble", "casino", "odds"
-    ],
-    "boundaries": [
-        "boundary", "boundaries", "people pleaser", "guilt", "say no", "pressure", "obligated"
-    ],
-    "reflection": [
-        "journal", "reflect", "meaning", "why", "what should i do", "what do i do", "how should i", "help me decide"
-    ],
-}
-
+SLEEP_WORDS = [
+    "SLEEP", "REST", "UNPLUG", "WINDDOWN",
+    "QUIET", "TEA", "DARK", "CALM",
+    "BREATHE", "STRETCH"
+]
