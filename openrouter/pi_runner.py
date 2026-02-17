@@ -1,3 +1,19 @@
+#!/usr/bin/env python3
+"""
+openrouter/pi_runner.py
+
+- Records a question from a USB mic via whisper.cpp near-realtime listener
+- Uses OpenRouter LLM for:
+  (1) mode classification: YES_NO_MAYBE vs ONE_WORD
+  (2) YES/NO/MAYBE answering (no longer random for fact questions)
+- Sends answer to Arduino-controlled Ouija hardware (optional)
+
+Run:
+  python -m openrouter.pi_runner
+or:
+  python openrouter/pi_runner.py
+"""
+
 import os
 import time
 import json
@@ -7,76 +23,100 @@ import requests
 from openrouter.ouija_hardware import OuijaHardware
 from openrouter.pi_whispercpp_v4 import listen_question_near_realtime
 
+# NEW: import wordbanks from separate file
+from openrouter.wordbanks import (
+    YES_NO_MAYBE,
+    KEYWORDS,
+    WORD_BANKS,
+)
+
 # =====================================================
 # CONFIG
 # =====================================================
 
 HARDWARE_ENABLED = True
-SERIAL_PORT = "/dev/ttyACM0"   # <-- CHANGE if needed on Pi
+SERIAL_PORT = "/dev/ttyACM0"   # change if needed on Pi
 SERIAL_BAUD = 115200
 
+# OpenRouter
 MODEL_NAME = "z-ai/glm-4.5-air:free"
 OPENROUTER_COMPLETIONS_URL = "https://openrouter.ai/api/v1/completions"
 
+# Small pause so logs don't smash together
 PRE_RESPONSE_PAUSE = 0.25
 
+
 # =====================================================
-# WORD POOLS
+# OPENROUTER HELPERS
 # =====================================================
 
-FOOD_WORDS = [
-    "RAMEN", "PASTA", "RICE", "SOUP", "SALAD", "SUSHI", "TOAST",
-    "BURRITO", "TACOS", "PIZZA", "CURRY", "NOODLES", "SANDWICH",
-    "DUMPLINGS", "PHO", "BIBIMBAP", "UDON", "POKE",
-    "FRUIT", "YOGURT", "COFFEE", "TEA", "SMOOTHIE"
-]
+def _openrouter_headers(api_key: str) -> dict:
+    return {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "http://localhost",
+        "X-Title": "OuijaBoard-Pi",
+    }
 
-ACTION_WORDS = [
-    "SLEEP", "REST", "WALK", "TEXT", "STUDY", "BREATHE",
-    "WRITE", "CLEAN", "STRETCH", "SHOWER", "PLAN",
-    "READ", "DANCE", "CREATE", "RESET"
-]
 
-GENERIC_WORDS = [
-    "WAIT", "TRUST", "GO", "STAY", "LISTEN", "RELAX",
-    "FOCUS", "GROW", "HEAL", "PAUSE", "MOVE", "CHOOSE"
-]
+def openrouter_completion(prompt: str, max_tokens: int = 8, temperature: float = 0.2, timeout_s: int = 30) -> str:
+    """
+    Calls OpenRouter Completions API (text-in, text-out). Returns raw text.
+    """
+    api_key = os.getenv("OPENROUTER_API_KEY")
+    if not api_key:
+        return ""
 
-RELATIONSHIP_WORDS = [
-    "HONESTY", "BOUNDARIES", "APOLOGY", "CLOSURE",
-    "PATIENCE", "LOYALTY", "SPACE", "CLARITY"
-]
+    payload = {
+        "model": MODEL_NAME,
+        "prompt": prompt,
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+    }
 
-SCHOOL_WORK_WORDS = [
-    "START", "REVISE", "SUBMIT", "OUTLINE",
-    "PRACTICE", "EMAIL", "DEADLINE"
-]
+    try:
+        r = requests.post(
+            OPENROUTER_COMPLETIONS_URL,
+            headers=_openrouter_headers(api_key),
+            data=json.dumps(payload),
+            timeout=timeout_s,
+        )
+        if r.status_code != 200:
+            return ""
+        return (r.json().get("choices", [{}])[0].get("text") or "").strip()
+    except Exception:
+        return ""
 
-YES_NO_MAYBE = ["YES", "NO", "MAYBE"]
 
 # =====================================================
 # MODE CLASSIFICATION
 # =====================================================
 
 def classify_mode(question: str) -> str:
-    q = question.lower().strip()
+    """
+    Return:
+      - "YES_NO_MAYBE"
+      - "ONE_WORD"
+    """
+    q = (question or "").lower().strip()
 
-    if q.startswith(("what should", "what do", "what is", "who", "where", "when")):
+    # cheap heuristics first (fast, predictable)
+    if any(q.startswith(x) for x in ("what should", "what do", "what is", "who", "where", "when", "how do", "how should")):
         return "ONE_WORD"
 
-    if any(w in q for w in [
-        "eat", "food", "hungry", "dinner", "lunch",
-        "breakfast", "snack", "drink", "cook"
-    ]):
-        return "ONE_WORD"
+    # If it contains any "one-word" category keywords, return ONE_WORD
+    # (except if it clearly looks like a yes/no question)
+    looks_yesno = q.endswith("?") or q.startswith(("is ", "are ", "am ", "do ", "does ", "did ", "should ", "can ", "could ", "will ", "would ", "was ", "were "))
+    if not looks_yesno:
+        for cat, kws in KEYWORDS.items():
+            if any(w in q for w in kws):
+                return "ONE_WORD"
 
-    if q.endswith("?"):
+    # if it looks like a yes/no question, keep it yes/no (but answer via LLM)
+    if looks_yesno:
         return "YES_NO_MAYBE"
 
-    api_key = os.getenv("OPENROUTER_API_KEY")
-    if not api_key:
-        return "YES_NO_MAYBE"
-
+    # If OpenRouter key exists, ask LLM to decide the mode
     prompt = f"""
 Classify how a mystical ouija board should answer.
 
@@ -88,56 +128,87 @@ Question:
 {question.strip()}
 """.strip()
 
-    payload = {
-        "model": MODEL_NAME,
-        "prompt": prompt,
-        "max_tokens": 4,
-        "temperature": 0.2,
-    }
+    out = openrouter_completion(prompt, max_tokens=4, temperature=0.1)
+    out_up = (out or "").upper()
 
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost",
-        "X-Title": "OuijaBoard-Pi",
-    }
+    if "ONE_WORD" in out_up:
+        return "ONE_WORD"
+    if "YES_NO_MAYBE" in out_up:
+        return "YES_NO_MAYBE"
 
-    try:
-        r = requests.post(
-            OPENROUTER_COMPLETIONS_URL,
-            headers=headers,
-            data=json.dumps(payload),
-            timeout=30,
-        )
-        if r.status_code == 200:
-            text = (r.json()["choices"][0]["text"] or "").upper()
-            if "ONE_WORD" in text:
-                return "ONE_WORD"
-    except:
-        pass
-
+    # fallback
     return "YES_NO_MAYBE"
+
+
+# =====================================================
+# YES / NO / MAYBE ANSWER (LLM, not random)
+# =====================================================
+
+def answer_yes_no_maybe(question: str) -> str:
+    """
+    Uses LLM for YES/NO/MAYBE so basic factual questions don't feel broken.
+    Falls back to random if no API key / error.
+    """
+    prompt = f"""
+You are an oracle controlling a physical ouija board.
+
+Answer the user's question with EXACTLY ONE token:
+YES
+NO
+MAYBE
+
+Rules:
+- Use common knowledge when applicable.
+- If the question is ambiguous, subjective, or not answerable with certainty, return MAYBE.
+- Do not add punctuation or extra words.
+
+Question: {question.strip()}
+""".strip()
+
+    out = openrouter_completion(prompt, max_tokens=2, temperature=0.1)
+    out_up = (out or "").strip().upper()
+
+    # strict normalize
+    if out_up == "YES":
+        return "YES"
+    if out_up == "NO":
+        return "NO"
+    if out_up == "MAYBE":
+        return "MAYBE"
+
+    # sometimes models return extra whitespace or newline; try first token
+    tok = out_up.split()[0] if out_up else ""
+    if tok in ("YES", "NO", "MAYBE"):
+        return tok
+
+    return random.choice(YES_NO_MAYBE)
+
 
 # =====================================================
 # WORD ORACLE
 # =====================================================
 
 def pick_one_word(question: str) -> str:
-    q = question.lower()
+    q = (question or "").lower()
 
-    if any(w in q for w in ["eat", "food", "hungry", "dinner", "lunch", "breakfast"]):
-        return random.choice(FOOD_WORDS)
+    # Pick a category by keyword match (first match wins, ordered by KEYWORDS insertion order)
+    matched_category = None
+    for cat, kws in KEYWORDS.items():
+        if any(w in q for w in kws):
+            matched_category = cat
+            break
 
-    if any(w in q for w in ["love", "date", "crush", "relationship", "text"]):
-        return random.choice(RELATIONSHIP_WORDS)
+    # Fallback categories if nothing matches
+    if not matched_category:
+        # "do / now / today" style prompts -> action-ish
+        if any(w in q for w in ("do", "today", "tonight", "now", "this week", "tomorrow")):
+            matched_category = "actions"
+        else:
+            matched_category = "generic"
 
-    if any(w in q for w in ["study", "exam", "class", "work", "job", "assignment"]):
-        return random.choice(SCHOOL_WORK_WORDS + ACTION_WORDS)
+    bank = WORD_BANKS.get(matched_category) or WORD_BANKS["generic"]
+    return random.choice(bank)
 
-    if any(w in q for w in ["do", "today", "tonight", "now"]):
-        return random.choice(ACTION_WORDS + GENERIC_WORDS)
-
-    return random.choice(GENERIC_WORDS)
 
 # =====================================================
 # MAIN
@@ -168,12 +239,15 @@ def main():
 
             print("[MIC] Listening...")
 
+            # NOTE: these params are chosen to be more stable on USB mics
+            # - chunk_s=2.0 makes RMS less jittery
+            # - silence_chunks_to_stop=1 means ~2 seconds of silence stops capture
             try:
                 text = listen_question_near_realtime(
-                    max_seconds=12.0,
-                    chunk_s=1.0,
-                    silence_chunks_to_stop=2,
-                    calibrate_chunks=2,
+                    max_seconds=14.0,
+                    chunk_s=2.0,
+                    silence_chunks_to_stop=1,
+                    calibrate_chunks=3,
                     min_speech_chunks=1,
                     debug_rms=True
                 )
@@ -192,7 +266,7 @@ def main():
             print(f"[MODE] {mode}")
 
             if mode == "YES_NO_MAYBE":
-                ans = random.choice(YES_NO_MAYBE)
+                ans = answer_yes_no_maybe(text)
                 print(f"[RESPONSE] {ans}")
 
                 if hw:
@@ -221,6 +295,7 @@ def main():
     finally:
         if hw:
             hw.close()
+
 
 if __name__ == "__main__":
     main()
