@@ -9,31 +9,28 @@ from typing import Optional
 DEFAULT_PORT = "/dev/cu.usbmodem1101"
 DEFAULT_BAUD = 115200
 
-# --- MAP (X Range: 1..42 | Y: 0..50) ---
-# Reduced vocabulary board to spell: YES / NO / MAYBE using letters: Y E S N O M A B (+ E reused)
+# --- MAP (X Range: 0 to -41 | Y: 0 to -38) ---
 MAP = {
-    # Reference points
-    "PRELOAD": (1, 0),     # approach point to reduce backlash
-    " ": (21, 25),         # Rest / neutral (adjust if you want)
+    # Top Row (Upper arc)
+    "A": (75, 0),   "B": (-34, -11), "C": (-30, -9),   "D": (-26, -7.5),
+    "E": (-22, -6.5), "F": (-19, -6),  "G": (16, -6),  "H": (25, -6.5),
+    "I": (0, -7.5), "J": (-6, -9),   "K": (-3, -11),  "L": (-1, -14),
+    "M": (0, -14),
 
-    # YES (top)
-    "Y": (8, 44),
-    "E": (21, 48),
-    "S": (34, 44),
+    # Bottom Row (Lower arc)
+    "N": (-36, -24), "O": (-32, -21), "P": (-28, -18), "Q": (-24, -16),
+    "R": (-21, -15), "S": (50, -15),   "T": (-15, -15), "U": (-12, -16),
+    "V": (-9, -18),  "W": (-6, -21),  "X": (-3, -24),  "Y": (-68, -24),
+    "Z": (0, -24),
 
-    # NO (bottom-ish)
-    "N": (8, 10),
-    "O": (34, 10),
+    # Control elements
+    "YES": (-36, -4),
+    "NO": (-5, -4),
+    # If you don't have a dedicated MAYBE spot, we will spell "MAYBE" instead
+    # "MAYBE": (-20, -4),
 
-    # MAYBE letters (middle)
-    "M": (14, 30),
-    "A": (28, 30),
-    "B": (21, 20),
-
-    # Optional control tokens if you still call these elsewhere
-    "YES": (10, 46),
-    "NO": (32, 12),
-    "GOODBYE": (21, 2),
+    "GOODBYE": (-20, -36),
+    " ": (-15, -10),  # Rest position (center)
 }
 
 
@@ -163,18 +160,12 @@ class OuijaHardware:
         self.move_to(" ", speed=speed, dwell=0.5)
 
     def spell_text(self, text: str, speed: int = 400):
-        """
-        Move letter-by-letter for simple spelling.
-        Adds a PRELOAD move before each character to reduce backlash / rail slop effects.
-        """
+        """Move letter-by-letter for simple spelling."""
         text = text.upper()
         for ch in text:
             if ch == " ":
                 self.move_to(" ", speed=speed, dwell=0.6)
             elif ch in self.map:
-                # Always approach from same direction for repeatability
-                if "PRELOAD" in self.map:
-                    self.move_to("PRELOAD", speed=speed, dwell=0.35)
                 self.move_to(ch, speed=speed, dwell=1.2)
             else:
                 # ignore punctuation/unsupported symbols
@@ -185,7 +176,7 @@ class OuijaHardware:
 if __name__ == "__main__":
     hw = OuijaHardware(debug_serial=False)
     hw.connect()
-    print("Connected. Type Y/E/S/N/O/M/A/B, YES, NO, GOODBYE, rest, or q to quit.")
+    print("Connected. Type A..Z, YES, NO, GOODBYE, rest, or q to quit.")
     try:
         while True:
             s = input("test> ").strip()
@@ -200,13 +191,8 @@ if __name__ == "__main__":
             if token in hw.map:
                 hw.move_to(token)
             else:
-                # If they type a word like MAYBE, spell it
-                if len(token) > 1:
-                    print(f'Spelling "{token}"')
-                    hw.spell_text(token)
-                    hw.rest(speed=500)
-                else:
-                    print("Not in map.")
+                print("Not in map.")
     finally:
         hw.close()
         print("Closed.")
+
