@@ -38,7 +38,7 @@ Driver pins:
 
 2A -> Coil B
 2B -> Coil B
-
+```
 ---
 
 ## Typical Ender-3 Motor Wiring
