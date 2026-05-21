@@ -244,3 +244,7 @@ The `experimental/` directory contains:
 - Early prototypes and trials
 
 These are not needed to run the project and may require additional setup.
+
+## Full Documentation:
+See full technical documentation here:
+https://docs.google.com/document/d/1RVrjdhs2Rm4kQesnLVf1V53qHFd4m93kJXKHGK4Q5og/edit?usp=sharing
