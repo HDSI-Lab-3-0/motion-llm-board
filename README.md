@@ -110,7 +110,7 @@ motion-llm-board/
 │
 ├── data/                      # Prompts, logs, test inputs
 │
-├── requir-pi-pints.txt           # Python dependencies (Pi)
+├─requirements-pi.txt           # Python dependencies (Pi)
 ├── README.md                  # Project overview + architecture
 ├── .gitignore
 
