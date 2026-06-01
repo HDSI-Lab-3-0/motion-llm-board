@@ -1,4 +1,4 @@
-# Ouija Board on Raspberry Pi 4
+# OuijAI
 
 **Speech -> LLM -> Physical motion**
 
@@ -96,9 +96,9 @@ motion-llm-board/
 │
 ├── openrouter/                # Stable Raspberry Pi implementation
 │   │
-│   ├── pi_runner.py           # Main entry point (Pi runtime)
+│   ├ runner_spooky4.py           # Main entry point (Pi runtime)
 │   ├── pi_whispercpp_v4.py    # Local STT + VAD (whisper.cpp)
-│   ├── ouija_hardware.py      # Serial → motor control interface
+│   ├ new_hardware_bridge.py      # Serial → motor control interface
 │   │
 │   └── __init__.py
 │
