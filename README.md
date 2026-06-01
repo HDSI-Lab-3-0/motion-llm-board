@@ -5,7 +5,7 @@
 A voice-controlled, LLM-driven "ouija-style" board running on a Raspberry Pi 4, combining local speech-to-text with a cloud-based large language model to drive physical motion.
 
 ## Overview
-This project connects real-time speech iinput to a physical system using a hybrid edge-and-cloud AI pipeline.
+This project connects real-time speech input to a physical system using a hybrid edge-and-cloud AI pipeline.
 
 Speech is transcribed locally on the Raspberry Pi using **whisper.cpp**.
 The resulting text is then classified by a large language model (LLM) to determine how the board should respond.
