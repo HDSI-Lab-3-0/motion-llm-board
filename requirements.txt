@@ -1,14 +1,14 @@
 # --- Core ---
-python-dotenv>=1.0.0
-requests>=2.31.0
+python-dotenv>=1.2.4
+requests>=2.34.2
 numpy>=1.24.0
 
 # --- OpenRouter / OpenAI-compatible client ---
-openai>=1.6.0
+openai>=3.37.0
 
 # --- Audio + Speech ---
-SpeechRecognition>=3.10.0
-openai-whisper>=20231117
+SpeechRecognition>=3.17.0
+openai-whisper>=20250625
 pyaudio>=0.2.14
 
 # --- Serial communication ---
