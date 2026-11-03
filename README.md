@@ -1,250 +1,46 @@
-# OuijAI
+﻿# OuijAI: local speech to physical motion
 
-**Speech -> LLM -> Physical motion**
+The maintained runtime targets Raspberry Pi 5, a USB microphone, and the existing Arduino motion board. Speech is transcribed with whisper.cpp; local Ollama replaces the former OpenRouter API. No cloud key is required.
 
-A voice-controlled, LLM-driven "ouija-style" board running on a Raspberry Pi 4, combining local speech-to-text with a cloud-based large language model to drive physical motion.
+## Install and run
 
-## Overview
-This project connects real-time speech input to a physical system using a hybrid edge-and-cloud AI pipeline.
+Use Python 3.10–3.12 and **one dependency file**, [requirements.txt](requirements.txt), inside a venv. Ollama, whisper.cpp, and ALSA are separate system tools.
 
-Speech is transcribed locally on the Raspberry Pi using **whisper.cpp**.
-The resulting text is then classified by a large language model (LLM) to determine how the board should respond.
-That decision is translated into physical movement via serial-controlled motors.
+Follow [OLLAMA_MIGRATION_AND_PI_SETUP.md](OLLAMA_MIGRATION_AND_PI_SETUP.md) for the complete clone, installation, model, microphone, serial, testing, and troubleshooting instructions.
 
-The LLM is an active part of the system's decision-making pipeline.
+After completing that setup, run from the repository root:
 
-## What This System Does
-1. User presses **ENTER** and speaks a question aloud
-2. Audio is captured from a **USB microphone**
-3. **whisper.cpp** performs local speech-to-text transcription
-4. The transcribed question is sent to a **large language model (LLM)
-5. The LLM reasoning layer decides an output
-   - YES / NO / MAYBE
-   - ONE WORD
-6. The Raspberry Pi translates the LLM's decision into serial commands 
-7. An Arduino drives motors that move a physical pointer on the board
-
----
-## System Architecture
-```
-┌────────────┐
-│    User    │
-└─────┬──────┘
-      │  speaks
-      ▼
-┌────────────┐
-│ Microphone │
-│  (USB)     │
-└─────┬──────┘
-      │  audio stream
-      ▼
-┌──────────────────────┐
-│   Raspberry Pi 4     │
-│  (System Controller)│
-└─────┬────────────────┘
-      │
-      ▼
-┌──────────────────────┐
-│     whisper.cpp      │
-│  Local Speech-to-Text│
-└─────┬────────────────┘
-      │  transcribed text
-      ▼
-┌──────────────────────────────┐
-│ Algorithmic Routing Layer    │
-│ (Python orchestration logic) │
-└─────┬────────────────────────┘
-      │  structured prompt
-      ▼
-┌──────────────────────────────┐
-│ OpenRouter API               │
-│ Large Language Model (LLM)   │
-│ Question Type Classification│
-└─────┬────────────────────────┘
-      │  response mode
-      ▼
-┌──────────────────────────────┐
-│ Decision Layer (Host Python) │
-│ • Enforces output constraints│
-│ • Selects final response     │
-│ • Produces control token     │
-└─────┬────────────────────────┘
-      │  serial command
-      ▼
-┌──────────────────────────────┐
-│ Serial Communication         │
-│ (USB / pyserial)             │
-└─────┬────────────────────────┘
-      │
-      ▼
-┌──────────────────────────────┐
-│ Arduino/ESP32)              │
-│ GRBL Motor Control Logic     │
-└─────┬────────────────────────┘
-      │  motor signals
-      ▼
-┌────────────────────────┐
-│ Hidden Magnet (Under)  │
-│ + Surface Pointer      │
-│ (Magnetic Coupling)    │
-└───────────────────────
-
-```
-## Project Structure
-```
-motion-llm-board/
-│
-├── openrouter/                # Stable Raspberry Pi implementation
-│   │
-│   ├ runner_spooky4.py           # Main entry point (Pi runtime)
-│   ├── pi_whispercpp_v4.py    # Local STT + VAD (whisper.cpp)
-│   ├ new_hardware_bridge.py      # Serial → motor control interface
-│   │
-│   └── __init__.py
-│
-├── experimental/              # Experimental / research code (not maintained)
-│   │
-│   ├── tinker/                # Tinker LLM inference + server experiments
-│   ├── training/              # Datasets + fine-tuning scripts
-│   └── prototypes/            # Early runner versions and throwaway tests
-│
-├── data/                      # Prompts, logs, test inputs
-│
-├─requirements-pi.txt           # Python dependencies (Pi)
-├── README.md                  # Project overview + architecture
-├── .gitignore
-
-```
-**Important**
-- `openrouter/` is the recommended and maintained version
-- `experimental/` is kept for transparency and learning purposes only
-
----
-
-## Requirements
-**Hardware**
-- Raspberry Pi 4
-- USB microphone
-- Arduino (Uno/Nano/compatible)
-- Motors or servos connected to Arduino
-- USB cable
-- Magnet
-- Physical board
-
-**Software**
-- Raspberry Pi OS (64-bit)
-- Python 3.10
-- whisper.cpp
-- ALSA (arecord)
-- Openrouter LLM
-
-## System Dependencies (APT)
-Update system packages first:
-```bash 
-sudo apt update && sudo apt upgrade -y
-```
-Install required build + audiio tools:
 ```bash
-sudo apt install -y \
-  git wget curl \
-  build-essential cmake pkg-config \
-  alsa-utils ffmpeg \
-  libasound2-dev
-```
-Install Miniconda (ARM64)
-Download Miniconda for **Linux aarch64**:
-```bash
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
-bash Miniconda3-latest-Linux-aarch64.sh
-```
-Activate conda:
-```bash
-source ~/.bashrc
-conda --version
+source .venv/bin/activate
+python -m openrouter.runner_spooky4
 ```
 
-## Python Setup
-1. Create a virtual environment
-```bash
-conda create -n ouija-board python=3.10 -y
-conda activate ouija-board
-```
-2. Install Requirements
-Install project dependencies
-```bash
-pip install -r requirements-pi.txt
-```
-If you get audio-related build errors (common on Pi), install these and retry:
-```bash
-sudo apt install -y python3-dev portaudio19-dev
+Press Enter to speak, `t` to type a question, or `q` to quit. The package retains its historical name `openrouter` for compatibility; the maintained runner uses Ollama. Copy [.env.example](.env.example) to `.env` and configure it. The example disables physical motion for initial testing; set `OUIJA_HARDWARE_ENABLED=true` when ready.
+
+## Architecture
+
+```text
+User speaks
+  -> USB microphone
+  -> Raspberry Pi 5 / ALSA recording
+  -> whisper.cpp local transcription (existing VAD)
+  -> Python algorithmic routing and structured prompt
+  -> Ollama local model (default llama3.2:3b)
+  -> Python decision constraints and word-bank selection
+  -> USB / pyserial (115200 baud)
+  -> existing Arduino AccelStepper firmware
+  -> motors / hidden magnet / surface pointer
 ```
 
-## Set OpenRouter API Key (Required for LLM Classification)
-This project uses OpenRouter for the LLM classification layer.
-```bash
-export OPENROUTER_API_KEY="YOUR_KEY"
-```
+Routing rules handle common questions first. The model handles remaining classification and constrained answer selection. Python accepts YES/NO or a word from the selected bank; existing local fallbacks handle invalid or unavailable model output. MAYBE is excluded. The firmware uses a custom serial protocol, rather than GRBL.
 
-## whisper.cpp Setup (Local Speech-to-Text)
-This project uses `whisper.cpp` for local transcription on the Pi.
-You must clone and set up the Whisper real-time repository separately.
+## Runtime files
 
-1. Clone the Whisper Repository:
-From home:
-```bash
-cd ~
-git clone https://github.com/ggml-org/whisper.cpp.git
-cd whisper.cpp
-```
-Build (recommended):
-```bash
-make -j2
-```
+- [runner_spooky4.py](openrouter/runner_spooky4.py): entry point, routing, Ollama requests, decision constraints, existing serial bridge.
+- [pi_whispercpp_v4.py](openrouter/pi_whispercpp_v4.py): ALSA recording, noise calibration, VAD, whisper.cpp execution.
+- [wordbanks_spooky3.py](openrouter/wordbanks_spooky3.py): unchanged vocabulary and keyword categories.
+- [new_hardware_bridge.py](openrouter/new_hardware_bridge.py): unchanged separate serial diagnostic utility.
+- [SPELL_numbers.ino](hardware/SPELL_numbers.ino): unchanged firmware, homing and calibrated motion.
+- [tests](tests): model/serial simulations and behavior-preservation checks.
 
-2. Download a Whisper Model
-From the whisper.cpp folder:
-```bash
-cd ~/whisper.cpp/models
-bash ./download-ggml-model.sh tiny.en
-```
-Confirm:
-```bash
-ls -lh ggml-tiny.en.bin
-```
-
-## Microphone Setup (ALSA)
-List recording devices:
-```bash
-arecord -l
-```
-You'll see something like:
-```arduino
-card 3: USB Audio [USB Audio], device 0: USB Audio 
-```
-This maps to:
-```makefile
-plughw:3,0
-```
-Set it in `openrouter/pi_whispercpp_v4.py`:
-```python
-USB_MIC_ALSA = "plughw:3,0"
-```
-
-## Running the Project
-From the repo:
-```bash
-cd ~/motion-llm-board
-conda activate ouija-board
-python openrouter.pi_runner
-```
-## Experimental Folder (Not Required)
-The `experimental/` directory contains:
-- Tinker inference code
-- Training scripts
-- Early prototypes and trials
-
-These are not needed to run the project and may require additional setup.
-
-## Full Documentation:
-See full technical documentation here:
-https://docs.google.com/document/d/1RVrjdhs2Rm4kQesnLVf1V53qHFd4m93kJXKHGK4Q5og/edit?usp=sharing
+Historical [experimental](experimental) and [backup](openrouter/backup) code remains for reference and may require its own research dependencies or cloud services. It is not part of the supported local launch path. Training is unnecessary to run this project.

@@ -1,16 +1,6 @@
-# --- Core ---
-python-dotenv>=1.0.0
-requests>=2.31.0
-numpy>=1.24.0
-
-# --- OpenRouter / OpenAI-compatible client ---
-openai>=1.6.0
-
-# --- Audio + Speech ---
-SpeechRecognition>=3.10.0
-openai-whisper>=20231117
-pyaudio>=0.2.14
-
-# --- Serial communication ---
-pyserial>=3.5
+# Single dependency list for the maintained Pi runtime (Python 3.10-3.12).
+# Ollama, whisper.cpp and ALSA are installed separately; see the setup guide.
+python-dotenv>=1.0,<2
+requests>=2.31,<3
+pyserial>=3.5,<4
 

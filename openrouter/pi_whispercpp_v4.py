@@ -11,9 +11,9 @@ from typing import Optional, List
 # AUDIO / WHISPER CONFIG
 # =====================================================
 
-USB_MIC_ALSA = "plughw:3,0"   # change if needed
-WHISPERCPP_DIR = "/home/ouijaboard/whisper.cpp"
-MODEL_PATH = "/home/ouijaboard/whisper.cpp/models/ggml-tiny.en.bin"
+USB_MIC_ALSA = os.getenv("OUIJA_USB_MIC_ALSA", "plughw:3,0")
+WHISPERCPP_DIR = os.path.expanduser(os.getenv("OUIJA_WHISPERCPP_DIR", "~/whisper.cpp"))
+MODEL_PATH = os.path.expanduser(os.getenv("OUIJA_WHISPER_MODEL", os.path.join(WHISPERCPP_DIR, "models", "ggml-tiny.en.bin")))
 
 
 # =====================================================

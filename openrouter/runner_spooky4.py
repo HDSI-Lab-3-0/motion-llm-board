@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-openrouter/pi_runner.py
+Maintained Pi runtime (package name retained for compatibility).
 
 Updated for new Arduino hardware firmware.
 
@@ -12,17 +12,23 @@ Arduino now accepts commands like:
 - WHERE
 
 Pipeline:
-speech -> Whisper -> OpenRouter / wordbank -> Arduino command
+speech -> Whisper -> local Ollama / wordbank -> Arduino command
 """
 
 import os
 import time
-import json
+from pathlib import Path
 import random
 import re
 import requests
 import serial
 from serial.tools import list_ports
+from dotenv import load_dotenv
+from openrouter.spelling import extract_spell_target
+from openrouter.response_policy import personal_or_presence_response
+
+# Load before importing speech settings; explicit shell variables take precedence.
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 from openrouter.pi_whispercpp_v4 import listen_question_near_realtime
 
@@ -36,15 +42,17 @@ from openrouter.wordbanks_spooky3 import (
 # CONFIG
 # =====================================================
 
-HARDWARE_ENABLED = True
+HARDWARE_ENABLED = os.getenv("OUIJA_HARDWARE_ENABLED", "true").lower() in ("true", "1", "yes")
 
 # On Mac this is usually /dev/cu.usbmodemXXXX.
 # On Raspberry Pi this may be /dev/ttyACM0.
-SERIAL_PORT = "/dev/cu.usbmodem1101"
+SERIAL_PORT = os.getenv("OUIJA_SERIAL_PORT", "/dev/ttyACM0")
 SERIAL_BAUD = 115200
 
-MODEL_NAME = "z-ai/glm-4.5-air:free"
-OPENROUTER_COMPLETIONS_URL = "https://openrouter.ai/api/v1/completions"
+MODEL_NAME = os.getenv("OUIJA_LOCAL_MODEL", "llama3.2:3b")
+OLLAMA_URL = os.getenv("OUIJA_OLLAMA_URL", "http://127.0.0.1:11434/api/generate")
+OLLAMA_TIMEOUT = float(os.getenv("OUIJA_OLLAMA_TIMEOUT", "180"))
+OLLAMA_CONTEXT = int(os.getenv("OUIJA_OLLAMA_CONTEXT", "2048"))
 
 PRE_RESPONSE_PAUSE = 0.25
 
@@ -192,43 +200,39 @@ def sanitize_word(text):
     return clean.upper()
 
 # =====================================================
-# OPENROUTER HELPERS
+# LOCAL OLLAMA HELPER
 # =====================================================
 
-def _openrouter_headers(api_key: str) -> dict:
-    return {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost",
-        "X-Title": "OuijaBoard-Pi",
-    }
-
-
-def openrouter_completion(prompt: str, max_tokens: int = 8, temperature: float = 0.2, timeout_s: int = 30) -> str:
-    api_key = os.getenv("OPENROUTER_API_KEY")
-    if not api_key:
-        return ""
-
+def ollama_completion(prompt: str, max_tokens: int = 8, temperature: float = 0.2, timeout_s: float = OLLAMA_TIMEOUT) -> str:
+    """Return local generated text, or empty text for the existing fallbacks."""
     payload = {
         "model": MODEL_NAME,
         "prompt": prompt,
-        "max_tokens": max_tokens,
-        "temperature": temperature,
+        "stream": False,
+        "options": {
+            "num_predict": max_tokens,
+            "temperature": temperature,
+            "num_ctx": OLLAMA_CONTEXT,
+        },
     }
 
     try:
         r = requests.post(
-            OPENROUTER_COMPLETIONS_URL,
-            headers=_openrouter_headers(api_key),
-            data=json.dumps(payload),
+            OLLAMA_URL,
+            json=payload,
             timeout=timeout_s,
         )
         if r.status_code != 200:
-            print(f"[OPENROUTER ERROR] status={r.status_code} body={r.text[:300]}")
+            print(f"[OLLAMA ERROR] status={r.status_code} body={r.text[:300]}; using existing fallback")
             return ""
-        return (r.json().get("choices", [{}])[0].get("text") or "").strip()
-    except Exception as e:
-        print(f"[OPENROUTER ERROR] {e}")
+        body = r.json()
+        if not isinstance(body, dict) or not isinstance(body.get("response"), str):
+            raise ValueError("Expected an Ollama JSON object with a string response")
+        out = body["response"].strip()
+        print(f"[OLLAMA RAW] {out!r} (validated by host decision layer)")
+        return out
+    except (requests.RequestException, ValueError) as e:
+        print(f"[OLLAMA ERROR] {e}; using existing fallback")
         return ""
 
 
@@ -278,7 +282,7 @@ Question:
 {question.strip()}
 """.strip()
 
-    out = openrouter_completion(prompt, max_tokens=4, temperature=0.1)
+    out = ollama_completion(prompt, max_tokens=4, temperature=0.1)
     out_up = (out or "").upper()
 
     if "ONE_WORD" in out_up:
@@ -345,7 +349,7 @@ Rules:
 Question: {question.strip()}
 """.strip()
 
-    out = openrouter_completion(prompt, max_tokens=2, temperature=0.05)
+    out = ollama_completion(prompt, max_tokens=2, temperature=0.05)
     out_up = sanitize_word(out)
 
     if out_up == "YES":
@@ -417,7 +421,7 @@ Rules:
 Question: {question.strip()}
 """.strip()
 
-    out = openrouter_completion(prompt, max_tokens=4, temperature=0.35)
+    out = ollama_completion(prompt, max_tokens=4, temperature=0.35)
     out_up = sanitize_word(out)
 
     safe_bank = [sanitize_word(w) for w in bank if sanitize_word(w) != "MAYBE"]
@@ -433,6 +437,7 @@ Question: {question.strip()}
 # =====================================================
 
 def main():
+    print(f"[LLM] Local Ollama: {MODEL_NAME} at {OLLAMA_URL}")
     print("[OUJIA] Press ENTER to listen.")
     print("       Type 'q' + ENTER to quit.")
     print("       Type 't' + ENTER for typed test mode.\n")
@@ -485,7 +490,30 @@ def main():
             print(f"\n[QUESTION] {text}")
             time.sleep(PRE_RESPONSE_PAUSE)
 
-            mode = classify_mode(text)
+            # Explicit spelling is an instruction, not a yes/no capability question.
+            spell_target = extract_spell_target(text)
+            if spell_target:
+                print(f"[MODE] SPELL\n[RESPONSE] {spell_target}\n[SOURCE] rules")
+                if hw:
+                    try:
+                        hw.spell_text(spell_target)
+                        last_response = spell_target
+                    except Exception as e:
+                        print(f"[HW ERROR] {e}")
+                continue
+
+            policy_response = personal_or_presence_response(text)
+            if policy_response == "WAIT":
+                print("[MODE] PERSONAL_UNKNOWN\n[RESPONSE] WAIT\n[SOURCE] rules")
+                if hw:
+                    try:
+                        hw.spell_text("WAIT")
+                        last_response = "WAIT"
+                    except Exception as e:
+                        print(f"[HW ERROR] {e}")
+                continue
+
+            mode = "YES_NO" if policy_response == "YES" else classify_mode(text)
             print(f"[MODE] {mode}")
 
             if mode == "YES_NO":
