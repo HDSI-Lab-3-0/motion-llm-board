@@ -12,10 +12,17 @@ After completing that setup, run from the repository root:
 
 ```bash
 source .venv/bin/activate
+export OUIJA_USB_MIC_ALSA=plughw:2,0
 python -m openrouter.runner_spooky4
 ```
 
 Press Enter to speak, `t` to type a question, or `q` to quit. The package retains its historical name `openrouter` for compatibility; the maintained runner uses Ollama. Copy [.env.example](.env.example) to `.env` and configure it. The example disables physical motion for initial testing; set `OUIJA_HARDWARE_ENABLED=true` when ready.
+
+The `export` command selects microphone card 2, device 0 for the current terminal.
+Run it before starting the app. Check microphone card numbers with `arecord -l`;
+they can change after reconnecting USB devices. To save this choice for future
+sessions, put `OUIJA_USB_MIC_ALSA=plughw:2,0` in `.env` (without `export`). An
+exported shell value takes precedence over `.env`.
 
 ## Architecture
 

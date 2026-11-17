@@ -1,10 +1,14 @@
-# openrouter/pi_whispercpp_v3.py
+# openrouter/pi_whispercpp_v4.py
 import subprocess
 import tempfile
 import os
 import re
 import wave
 import audioop
+import time
+import queue
+import threading
+from datetime import datetime, timezone
 from typing import Optional, List
 
 # =====================================================
@@ -146,98 +150,118 @@ def listen_question_near_realtime(
     debug_rms: bool = False,
 ) -> str:
     """
-    Records/transcribes short chunks until speech ends.
+    Continuously captures audio, then transcribes the complete question.
 
     Features:
-    - Ambient noise calibration
+    - Ambient noise calibration before the timestamped ready signal
     - Hysteresis (start threshold > stop threshold)
     - Requires actual speech before stopping
     """
-    if chunk_s < 1.0:
-        chunk_s = 1.0
+    if chunk_s <= 0 or max_seconds <= 0 or max_total_chunks <= 0:
+        raise ValueError("Recording duration and chunk limits must be positive")
 
-    chunks = int(max_seconds // chunk_s) + 1
-    chunks = min(chunks, max_total_chunks)
+    started = time.monotonic()
 
-    collected: List[str] = []
-    heard_speech_chunks = 0
-    silent_streak = 0
-    speaking_started = False
+    def event(message):
+        stamp = datetime.now(timezone.utc).isoformat(timespec="milliseconds")
+        print(f"[MIC {stamp} +{time.monotonic() - started:.3f}s] {message}", flush=True)
 
-    def clamp(x: int, lo: int, hi: int) -> int:
-        return max(lo, min(hi, x))
+    # One ALSA process for calibration and speech: no device reopen gaps.
+    rate = 16000
+    block_bytes = max(2, int(rate * chunk_s) * 2)
+    blocks = queue.Queue()
+    event("Preparing microphone; stay quiet during calibration...")
+    with tempfile.TemporaryFile() as errors:
+        proc = subprocess.Popen(
+            ["arecord", "-q", "-D", USB_MIC_ALSA, "-t", "raw",
+             "-f", "S16_LE", "-r", str(rate), "-c", "1"],
+            stdout=subprocess.PIPE, stderr=errors,
+        )
 
-    with tempfile.TemporaryDirectory() as td:
-        # --------------------------------
-        # 1) Ambient noise calibration
-        # --------------------------------
-        noise_samples = []
-
-        for i in range(max(0, calibrate_chunks)):
-            wav_path = os.path.join(td, f"calib_{i}.wav")
-            record_wav(wav_path, duration_s=chunk_s)
-            noise_samples.append(wav_rms(wav_path))
-
-        if noise_samples:
-            noise_samples.sort()
-            noise_rms = noise_samples[len(noise_samples) // 2]  # median
-        else:
-            noise_rms = 0
-
-        start_threshold = int(noise_rms * start_mult + start_offset)
-        stop_threshold = int(noise_rms * stop_mult + stop_offset)
-
-        start_threshold = clamp(start_threshold, 200, 1500)
-        stop_threshold = clamp(stop_threshold, 150, start_threshold - 50)
-
-        if debug_rms:
-            print(
-                f"[VAD] noise_rms={noise_rms} "
-                f"start_th={start_threshold} stop_th={stop_threshold}"
-            )
-
-        # --------------------------------
-        # 2) Main recording loop
-        # --------------------------------
-        for i in range(chunks):
-            wav_path = os.path.join(td, f"chunk_{i}.wav")
-            record_wav(wav_path, duration_s=chunk_s)
-            rms = wav_rms(wav_path)
-
-            if debug_rms:
-                print(
-                    f"[VAD] chunk={i} rms={rms} "
-                    f"speaking={speaking_started} silent={silent_streak}"
-                )
-
-            if not speaking_started:
-                is_speech = rms >= start_threshold
-                if is_speech:
-                    speaking_started = True
-            else:
-                is_speech = rms >= stop_threshold
-
-            if not is_speech:
-                if speaking_started and heard_speech_chunks >= min_speech_chunks:
-                    silent_streak += 1
-                    if silent_streak >= silence_chunks_to_stop:
+        def read_audio():
+            try:
+                while True:
+                    data = proc.stdout.read(block_bytes)
+                    if not data:
                         break
-                continue
+                    blocks.put(data)
+            finally:
+                blocks.put(None)
 
-            # Speech detected
-            heard_speech_chunks += 1
-            silent_streak = 0
+        reader = threading.Thread(target=read_audio, daemon=True)
+        reader.start()
 
-            t = transcribe_wav(wav_path).strip()
-            t = re.sub(r"\s+", " ", t)
-            if t:
-                collected.append(t)
+        def next_block():
+            try:
+                data = blocks.get(timeout=chunk_s + 5)
+            except queue.Empty:
+                raise RuntimeError("Microphone timed out waiting for audio") from None
+            if data is None or len(data) != block_bytes:
+                proc.poll()
+                errors.seek(0)
+                detail = errors.read().decode(errors="replace").strip()
+                raise RuntimeError(f"Microphone stopped before capture completed: {detail}")
+            return data
 
-    joined = " ".join(collected).strip()
-    joined = re.sub(r"\s+", " ", joined)
+        captured = []
+        try:
+            noise_samples = []
+            # Even without calibration, verify actual PCM arrives before readiness.
+            for _ in range(max(1, calibrate_chunks)):
+                noise_samples.append(audioop.rms(next_block(), 2))
+            noise_samples.sort()
+            noise_rms = noise_samples[len(noise_samples) // 2] if calibrate_chunks else 0
+            start_threshold = max(200, min(1500, int(noise_rms * start_mult + start_offset)))
+            stop_threshold = max(150, min(start_threshold - 50, int(noise_rms * stop_mult + stop_offset)))
+            if debug_rms:
+                event(f"VAD noise_rms={noise_rms} start_th={start_threshold} stop_th={stop_threshold}")
+            event("Listening ? speak now (microphone capture verified)")
+            heard = silent = 0
+            speaking = False
+            frames_left = max(1, int(max_seconds * rate))
+            for i in range(min(max_total_chunks, int(max_seconds / chunk_s) + 1)):
+                data = next_block()[:frames_left * 2]
+                frames_left -= len(data) // 2
+                rms = audioop.rms(data, 2)
+                if debug_rms:
+                    event(f"VAD chunk={i} rms={rms}")
+                is_speech = rms >= (stop_threshold if speaking else start_threshold)
+                # Keep leading audio and pauses so words are never cut at VAD boundaries.
+                captured.append(data)
+                if is_speech:
+                    if not speaking:
+                        event(f"Speech detected in audio interval {i * chunk_s:.3f}–{min((i + 1) * chunk_s, max_seconds):.3f}s after calibration")
+                    speaking = True
+                    heard += 1
+                    silent = 0
+                elif speaking and heard >= min_speech_chunks:
+                    silent += 1
+                    if silent >= silence_chunks_to_stop:
+                        break
+                if frames_left <= 0:
+                    break
+            event("Recording complete")
+        finally:
+            if proc.poll() is None:
+                proc.terminate()
+            try:
+                proc.wait(timeout=2)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait()
+            reader.join(timeout=2)
+            proc.stdout.close()
 
-    # Collapse exact repeated phrases
-    joined = re.sub(r"\b(.+?)\s+\1\b", r"\1", joined, flags=re.IGNORECASE)
-
-    return joined
-
+    if not speaking:
+        return ""
+    with tempfile.TemporaryDirectory() as td:
+        wav_path = os.path.join(td, "question.wav")
+        with wave.open(wav_path, "wb") as wf:
+            wf.setnchannels(1)
+            wf.setsampwidth(2)
+            wf.setframerate(rate)
+            wf.writeframes(b"".join(captured))
+        event("Transcribing...")
+        text = re.sub(r"\s+", " ", transcribe_wav(wav_path).strip())
+        event("Transcription complete")
+        return text

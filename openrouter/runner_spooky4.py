@@ -468,14 +468,13 @@ def main():
                 if not text:
                     continue
             else:
-                print("[MIC] Listening...")
-
                 try:
                     text = listen_question_near_realtime(
                         max_seconds=14.0,
-                        chunk_s=2.0,
-                        silence_chunks_to_stop=1,
-                        calibrate_chunks=3,
+                        chunk_s=0.25,
+                        silence_chunks_to_stop=4,
+                        calibrate_chunks=4,
+                        max_total_chunks=56,
                         min_speech_chunks=1,
                         debug_rms=True
                     )
