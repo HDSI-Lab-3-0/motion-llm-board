@@ -476,7 +476,7 @@ def main():
                         calibrate_chunks=4,
                         max_total_chunks=56,
                         min_speech_chunks=1,
-                        debug_rms=True
+                        debug_rms=False
                     )
                 except Exception as e:
                     print(f"[MIC ERROR] {e}")

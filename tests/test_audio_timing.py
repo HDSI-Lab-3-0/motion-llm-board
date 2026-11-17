@@ -32,11 +32,10 @@ class AudioTimingTests(unittest.TestCase):
         self.assertEqual(result, 'hello there')
         launch.assert_called_once()
         decode.assert_called_once()
-        self.assertIn('Preparing', messages[0])
-        self.assertIn('Listening', messages[1])
-        self.assertIn('Speech detected', messages[2])
-        self.assertIn('Recording complete', messages[3])
-        self.assertIn('Transcription complete', messages[-1])
+        self.assertEqual(len(messages), 3)
+        self.assertTrue(messages[0].endswith('Listening - speak now'))
+        self.assertTrue(messages[1].endswith('Captured'))
+        self.assertTrue(messages[2].endswith('Transcribed'))
         proc.terminate.assert_called_once()
 
     def test_failed_capture_never_announces_ready(self):

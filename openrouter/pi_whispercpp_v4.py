@@ -170,7 +170,6 @@ def listen_question_near_realtime(
     rate = 16000
     block_bytes = max(2, int(rate * chunk_s) * 2)
     blocks = queue.Queue()
-    event("Preparing microphone; stay quiet during calibration...")
     with tempfile.TemporaryFile() as errors:
         proc = subprocess.Popen(
             ["arecord", "-q", "-D", USB_MIC_ALSA, "-t", "raw",
@@ -213,9 +212,7 @@ def listen_question_near_realtime(
             noise_rms = noise_samples[len(noise_samples) // 2] if calibrate_chunks else 0
             start_threshold = max(200, min(1500, int(noise_rms * start_mult + start_offset)))
             stop_threshold = max(150, min(start_threshold - 50, int(noise_rms * stop_mult + stop_offset)))
-            if debug_rms:
-                event(f"VAD noise_rms={noise_rms} start_th={start_threshold} stop_th={stop_threshold}")
-            event("Listening ? speak now (microphone capture verified)")
+            event("Listening - speak now")
             heard = silent = 0
             speaking = False
             frames_left = max(1, int(max_seconds * rate))
@@ -223,14 +220,10 @@ def listen_question_near_realtime(
                 data = next_block()[:frames_left * 2]
                 frames_left -= len(data) // 2
                 rms = audioop.rms(data, 2)
-                if debug_rms:
-                    event(f"VAD chunk={i} rms={rms}")
                 is_speech = rms >= (stop_threshold if speaking else start_threshold)
                 # Keep leading audio and pauses so words are never cut at VAD boundaries.
                 captured.append(data)
                 if is_speech:
-                    if not speaking:
-                        event(f"Speech detected in audio interval {i * chunk_s:.3f}–{min((i + 1) * chunk_s, max_seconds):.3f}s after calibration")
                     speaking = True
                     heard += 1
                     silent = 0
@@ -240,7 +233,7 @@ def listen_question_near_realtime(
                         break
                 if frames_left <= 0:
                     break
-            event("Recording complete")
+            event("Captured")
         finally:
             if proc.poll() is None:
                 proc.terminate()
@@ -261,7 +254,6 @@ def listen_question_near_realtime(
             wf.setsampwidth(2)
             wf.setframerate(rate)
             wf.writeframes(b"".join(captured))
-        event("Transcribing...")
         text = re.sub(r"\s+", " ", transcribe_wav(wav_path).strip())
-        event("Transcription complete")
+        event("Transcribed")
         return text
