@@ -5,6 +5,29 @@ from openrouter.spelling import extract_spell_target
 
 
 class SpellingRegressionTests(unittest.TestCase):
+    def test_repeated_letters_keep_exact_command(self):
+        for word in ('GOOD', 'BOOKKEEPER', 'AAA'):
+            with self.subTest(word=word):
+                self.assertEqual(extract_spell_target(f'Spell {word}'), word)
+                bridge = runner.OuijaArduinoBridge(port='FAKE')
+                bridge.ser = Mock()
+                bridge.ser.readline.side_effect = [
+                    b'REPEAT LETTER O\n', b'DONE -7 3\n', b'DONE -3 32\n',
+                    b'OK SPELL_DONE\n']
+                bridge.spell_text(word)
+                bridge.ser.write.assert_called_once_with(f'SPELL {word}\n'.encode())
+                self.assertEqual(bridge.ser.readline.call_count, 4)
+
+    def test_diagnostic_bridge_waits_for_whole_word(self):
+        from openrouter.new_hardware_bridge import OuijaBridge
+        bridge = OuijaBridge.__new__(OuijaBridge)
+        bridge.ser = Mock()
+        bridge.ser.readline.side_effect = [
+            b'REPEAT LETTER O\n', b'DONE -7 3\n', b'DONE -3 32\n', b'OK SPELL_DONE\n']
+        bridge.spell('GOOD')
+        self.assertEqual(bridge.ser.readline.call_count, 4)
+        bridge.ser.write.assert_called_once_with(b'SPELL GOOD\n')
+
     def test_polite_requests(self):
         for text in ('Hello? Can you spell Apple, please? Hey, thanks.', 'Spell apple.', 'Could you please spell the word apple?', 'Would you spell "apple", please?'):
             with self.subTest(text=text):

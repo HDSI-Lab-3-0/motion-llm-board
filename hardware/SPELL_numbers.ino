@@ -43,6 +43,10 @@ float accelStepsX    = 20.0;
 float maxSpeedStepsY = 260.0;
 float accelStepsY    = 100.0;
 
+// Repeat-letter gesture uses the same calibrated center as the CENTER command.
+const unsigned long repeatLetterPauseMs = 500;
+const unsigned long repeatAwayPauseMs = 150;
+
 // Homing tuning
 float homeSpeedStepsX = 80.0;
 float homeSpeedStepsY = 200.0;
@@ -239,21 +243,21 @@ void disableMotors() {
 }
 
 void reportPosition() {
-  Serial.print("POS ");
+  Serial.print(F("POS "));
 
   if (xKnown) Serial.print(currentXmm(), 2);
-  else Serial.print("X?");
+  else Serial.print(F("X?"));
 
-  Serial.print(" ");
+  Serial.print(F(" "));
 
   if (yKnown) Serial.println(currentYmm(), 2);
-  else Serial.println("Y?");
+  else Serial.println(F("Y?"));
 }
 
 void reportSwitches() {
-  Serial.print("X ");
+  Serial.print(F("X "));
   Serial.print(switchPressedX() ? "PRESSED" : "RELEASED");
-  Serial.print(" | Y ");
+  Serial.print(F(" | Y "));
   Serial.println(switchPressedY() ? "PRESSED" : "RELEASED");
 }
 
@@ -262,41 +266,41 @@ void zeroAllHere() {
   stepperY.setCurrentPosition(0);
   xKnown = true;
   yKnown = true;
-  Serial.println("OK ZEROALL");
+  Serial.println(F("OK ZEROALL"));
   reportPosition();
 }
 
 void zeroXHere() {
   stepperX.setCurrentPosition(0);
   xKnown = true;
-  Serial.println("OK ZEROX");
+  Serial.println(F("OK ZEROX"));
   reportPosition();
 }
 
 void zeroYHere() {
   stepperY.setCurrentPosition(0);
   yKnown = true;
-  Serial.println("OK ZEROY");
+  Serial.println(F("OK ZEROY"));
   reportPosition();
 }
 
 void moveBlockingTo(float x, float y) {
   if (!fullPositionKnown()) {
-    Serial.println("ERR position_unknown_use_HOMEALL_or_ZEROALL");
+    Serial.println(F("ERR position_unknown_use_HOMEALL_or_ZEROALL"));
     return;
   }
 
   if (!inBounds(x, y)) {
-    Serial.println("ERR out_of_bounds");
+    Serial.println(F("ERR out_of_bounds"));
     return;
   }
 
   stepperX.moveTo(mmToStepsX(x));
   stepperY.moveTo(mmToStepsY(y));
 
-  Serial.print("OK MOVING ");
+  Serial.print(F("OK MOVING "));
   Serial.print(x, 2);
-  Serial.print(" ");
+  Serial.print(F(" "));
   Serial.println(y, 2);
 
   while (stepperX.distanceToGo() != 0 || stepperY.distanceToGo() != 0) {
@@ -305,9 +309,9 @@ void moveBlockingTo(float x, float y) {
     monitorSwitchChanges();
   }
 
-  Serial.print("DONE ");
+  Serial.print(F("DONE "));
   Serial.print(currentXmm(), 2);
-  Serial.print(" ");
+  Serial.print(F(" "));
   Serial.println(currentYmm(), 2);
 }
 
@@ -332,7 +336,7 @@ void stopMotion() {
   stepperY.stop();
   stepperX.setSpeed(0);
   stepperY.setSpeed(0);
-  Serial.println("OK STOPPING");
+  Serial.println(F("OK STOPPING"));
 }
 
 // =========================
@@ -449,13 +453,13 @@ bool backOffYPhysicallyUntilReleased() {
 void homeX() {
   enableMotors();
 
-  Serial.println("HOMING X");
+  Serial.println(F("HOMING X"));
 
   if (switchPressedX()) {
-    Serial.println("X already pressed, backing off first");
+    Serial.println(F("X already pressed, backing off first"));
 
     if (!backOffXPhysicallyUntilReleased()) {
-      Serial.println("ERR x_switch_stuck_pressed");
+      Serial.println(F("ERR x_switch_stuck_pressed"));
       return;
     }
 
@@ -484,17 +488,17 @@ void homeX() {
   stepperX.setSpeed(0);
 
   if (!hit) {
-    Serial.println("ERR x_home_timeout");
+    Serial.println(F("ERR x_home_timeout"));
     applyMotionSettings();
     return;
   }
 
-  Serial.println("X trigger confirmed");
+  Serial.println(F("X trigger confirmed"));
 
   stepperX.setCurrentPosition(mmToStepsX(xHomeSwitchMm));
 
   if (!backOffXPhysicallyUntilReleased()) {
-    Serial.println("ERR x_backoff_timeout_or_stuck");
+    Serial.println(F("ERR x_backoff_timeout_or_stuck"));
     applyMotionSettings();
     return;
   }
@@ -514,20 +518,20 @@ void homeX() {
 
   xKnown = true;
 
-  Serial.println("OK HOMED_X_TO_CENTER");
+  Serial.println(F("OK HOMED_X_TO_CENTER"));
   reportPosition();
 }
 
 void homeY() {
   enableMotors();
 
-  Serial.println("HOMING Y");
+  Serial.println(F("HOMING Y"));
 
   if (switchPressedY()) {
-    Serial.println("Y already pressed, backing off first");
+    Serial.println(F("Y already pressed, backing off first"));
 
     if (!backOffYPhysicallyUntilReleased()) {
-      Serial.println("ERR y_switch_stuck_pressed");
+      Serial.println(F("ERR y_switch_stuck_pressed"));
       return;
     }
 
@@ -556,17 +560,17 @@ void homeY() {
   stepperY.setSpeed(0);
 
   if (!hit) {
-    Serial.println("ERR y_home_timeout");
+    Serial.println(F("ERR y_home_timeout"));
     applyMotionSettings();
     return;
   }
 
-  Serial.println("Y trigger confirmed");
+  Serial.println(F("Y trigger confirmed"));
 
   stepperY.setCurrentPosition(mmToStepsY(yHomeSwitchMm));
 
   if (!backOffYPhysicallyUntilReleased()) {
-    Serial.println("ERR y_backoff_timeout_or_stuck");
+    Serial.println(F("ERR y_backoff_timeout_or_stuck"));
     applyMotionSettings();
     return;
   }
@@ -586,7 +590,7 @@ void homeY() {
 
   yKnown = true;
 
-  Serial.println("OK HOMED_Y_TO_CENTER");
+  Serial.println(F("OK HOMED_Y_TO_CENTER"));
   reportPosition();
 }
 
@@ -595,7 +599,7 @@ void homeAll() {
   homeX();
 
   if (xKnown && yKnown) {
-    Serial.println("OK HOMEALL");
+    Serial.println(F("OK HOMEALL"));
     reportPosition();
   }
 }
@@ -678,16 +682,16 @@ void moveNumberChar(char digit) {
   float x, y;
 
   if (findNumber(digit, x, y)) {
-    Serial.print("NUMBER ");
+    Serial.print(F("NUMBER "));
     Serial.print(digit);
-    Serial.print(" -> ");
+    Serial.print(F(" -> "));
     Serial.print(x, 2);
-    Serial.print(" ");
+    Serial.print(F(" "));
     Serial.println(y, 2);
 
     moveBlockingTo(x, y);
   } else {
-    Serial.print("SKIP UNKNOWN NUMBER ");
+    Serial.print(F("SKIP UNKNOWN NUMBER "));
     Serial.println(digit);
   }
 }
@@ -696,29 +700,52 @@ void moveLetterChar(char c) {
   float x, y;
 
   if (findLetter(c, x, y)) {
-    Serial.print("LETTER ");
+    Serial.print(F("LETTER "));
     Serial.print(c);
-    Serial.print(" -> ");
+    Serial.print(F(" -> "));
     Serial.print(x, 2);
-    Serial.print(" ");
+    Serial.print(F(" "));
     Serial.println(y, 2);
 
     moveBlockingTo(x, y);
   } else {
-    Serial.print("SKIP UNKNOWN CHAR ");
+    Serial.print(F("SKIP UNKNOWN CHAR "));
     Serial.println(c);
   }
 }
 
-void spellToken(char *token) {
-  if (token[0] == '\0') return;
+bool repeatLetterDeparture(char c) {
+  float x, y;
+  if (!fullPositionKnown()) {
+    Serial.println(F("ERR repeat_position_unknown"));
+    return false;
+  }
+  if (!findLetter(c, x, y)) {
+    Serial.println(F("ERR repeat_letter_unknown"));
+    return false;
+  }
+  if (!inBounds(x, y) || !inBounds(xCenterMm, yCenterMm) ||
+      (x == xCenterMm && y == yCenterMm)) {
+    Serial.println(F("ERR repeat_center_invalid"));
+    return false;
+  }
+  Serial.print(F("REPEAT LETTER "));
+  Serial.println(c);
+  delay(repeatLetterPauseMs);
+  goCenter();
+  delay(repeatAwayPauseMs);
+  return true;
+}
+
+bool spellToken(char *token) {
+  if (token[0] == '\0') return true;
 
   char digit;
 
   // If token is ONE, TWO, THREE, etc., go to number position
   if (numberWordToDigit(token, digit)) {
     moveNumberChar(digit);
-    return;
+    return true;
   }
 
   // Otherwise process character by character
@@ -728,17 +755,21 @@ void spellToken(char *token) {
     if (c >= '0' && c <= '9') {
       moveNumberChar(c);
     } else if (c >= 'A' && c <= 'Z') {
+      bool repeated = i > 0 && token[i - 1] == c;
+      if (repeated && !repeatLetterDeparture(c)) return false;
       moveLetterChar(c);
+      if (repeated) delay(repeatLetterPauseMs);
     } else {
-      Serial.print("SKIP UNKNOWN CHAR ");
+      Serial.print(F("SKIP UNKNOWN CHAR "));
       Serial.println(c);
     }
   }
+  return true;
 }
 
 void spellWord(char *word) {
   if (!fullPositionKnown()) {
-    Serial.println("ERR position_unknown_use_HOMEALL_or_ZEROALL");
+    Serial.println(F("ERR position_unknown_use_HOMEALL_or_ZEROALL"));
     return;
   }
 
@@ -758,20 +789,20 @@ void spellWord(char *word) {
 
   // Special whole-word targets
   if (strcmp(cleanWord, "YES") == 0) {
-    Serial.println("SPECIAL WORD YES");
+    Serial.println(F("SPECIAL WORD YES"));
     goYes();
-    Serial.println("OK SPELL_DONE");
+    Serial.println(F("OK SPELL_DONE"));
     return;
   }
 
   if (strcmp(cleanWord, "NO") == 0) {
-    Serial.println("SPECIAL WORD NO");
+    Serial.println(F("SPECIAL WORD NO"));
     goNo();
-    Serial.println("OK SPELL_DONE");
+    Serial.println(F("OK SPELL_DONE"));
     return;
   }
 
-  Serial.print("SPELLING ");
+  Serial.print(F("SPELLING "));
   Serial.println(cleanWord);
 
   // Tokenize input so SPELL ONE goes to 1, not O-N-E
@@ -788,7 +819,7 @@ void spellWord(char *word) {
     } else {
       if (tokenIndex > 0) {
         token[tokenIndex] = '\0';
-        spellToken(token);
+        if (!spellToken(token)) return;
         tokenIndex = 0;
       }
 
@@ -796,7 +827,7 @@ void spellWord(char *word) {
     }
   }
 
-  Serial.println("OK SPELL_DONE");
+  Serial.println(F("OK SPELL_DONE"));
 }
 
 // =========================
@@ -804,15 +835,15 @@ void spellWord(char *word) {
 // =========================
 void autoHomeOnStartup() {
   delay(1000);
-  Serial.println("AUTO HOMEALL START");
+  Serial.println(F("AUTO HOMEALL START"));
   homeAll();
 
   if (fullPositionKnown()) {
-    Serial.println("AUTO MOVE TO REST CENTER");
+    Serial.println(F("AUTO MOVE TO REST CENTER"));
     goCenter();
-    Serial.println("READY_AT_CENTER");
+    Serial.println(F("READY_AT_CENTER"));
   } else {
-    Serial.println("ERR AUTO_HOME_FAILED");
+    Serial.println(F("ERR AUTO_HOME_FAILED"));
   }
 }
 
@@ -828,9 +859,9 @@ void parseCommand(char *line) {
     len--;
   }
 
-  Serial.print("RAW:[");
+  Serial.print(F("RAW:["));
   Serial.print(line);
-  Serial.println("]");
+  Serial.println(F("]"));
 
   if (strcmp(line, "WHERE") == 0) {
     reportPosition();
@@ -899,13 +930,13 @@ void parseCommand(char *line) {
 
   if (strcmp(line, "ENABLE") == 0) {
     enableMotors();
-    Serial.println("OK ENABLED");
+    Serial.println(F("OK ENABLED"));
     return;
   }
 
   if (strcmp(line, "DISABLE") == 0) {
     disableMotors();
-    Serial.println("OK DISABLED");
+    Serial.println(F("OK DISABLED"));
     return;
   }
 
@@ -921,7 +952,7 @@ void parseCommand(char *line) {
 
   if (matched == 3 && strcmp(cmd, "OFFSET") == 0) {
     if (!fullPositionKnown()) {
-      Serial.println("ERR position_unknown_use_HOMEALL_or_ZEROALL");
+      Serial.println(F("ERR position_unknown_use_HOMEALL_or_ZEROALL"));
       return;
     }
 
@@ -931,7 +962,7 @@ void parseCommand(char *line) {
     return;
   }
 
-  Serial.println("ERR unknown_command");
+  Serial.println(F("ERR unknown_command"));
 }
 
 // =========================
@@ -954,7 +985,7 @@ void readSerialLine() {
       inputBuffer[inputIndex++] = c;
     } else {
       inputIndex = 0;
-      Serial.println("ERR line_too_long");
+      Serial.println(F("ERR line_too_long"));
     }
   }
 }
@@ -978,8 +1009,8 @@ void setup() {
   lastSwitchStateX = digitalRead(switchPinX);
   lastSwitchStateY = digitalRead(switchPinY);
 
-  Serial.println("READY");
-  Serial.println("COMMANDS: WHERE, SWITCHES, HOMEX, HOMEY, HOMEALL, YES, NO, SPELL word, CENTER, GOTO x y, OFFSET dx dy");
+  Serial.println(F("READY"));
+  Serial.println(F("COMMANDS: WHERE, SWITCHES, HOMEX, HOMEY, HOMEALL, YES, NO, SPELL word, CENTER, GOTO x y, OFFSET dx dy"));
 
   autoHomeOnStartup();
 }

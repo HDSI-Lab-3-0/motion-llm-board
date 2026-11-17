@@ -125,7 +125,7 @@ class OuijaArduinoBridge:
 
         return raw.decode(errors="ignore").strip()
 
-    def send_command(self, command, wait_done=True, timeout_s=120):
+    def send_command(self, command, wait_done=True, timeout_s=900):
         command = command.strip()
 
         if not command:

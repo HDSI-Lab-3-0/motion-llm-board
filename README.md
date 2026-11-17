@@ -39,8 +39,10 @@ Routing rules handle common questions first. The model handles remaining classif
 - [runner_spooky4.py](openrouter/runner_spooky4.py): entry point, routing, Ollama requests, decision constraints, existing serial bridge.
 - [pi_whispercpp_v4.py](openrouter/pi_whispercpp_v4.py): ALSA recording, noise calibration, VAD, whisper.cpp execution.
 - [wordbanks_spooky3.py](openrouter/wordbanks_spooky3.py): unchanged vocabulary and keyword categories.
-- [new_hardware_bridge.py](openrouter/new_hardware_bridge.py): unchanged separate serial diagnostic utility.
-- [SPELL_numbers.ino](hardware/SPELL_numbers.ino): unchanged firmware, homing and calibrated motion.
+- [new_hardware_bridge.py](openrouter/new_hardware_bridge.py): separate serial diagnostic utility with a longer movement timeout.
+- [SPELL_numbers.ino](hardware/SPELL_numbers.ino): firmware, homing and calibrated motion; repeated letters travel through CENTER.
 - [tests](tests): model/serial simulations and behavior-preservation checks.
 
 Historical [experimental](experimental) and [backup](openrouter/backup) code remains for reference and may require its own research dependencies or cloud services. It is not part of the supported local launch path. Training is unnecessary to run this project.
+
+For the repeat-letter firmware update, follow [the update guide](REPEAT_LETTER_UPDATE.md).

@@ -2,6 +2,12 @@
 
 ## Summary and scope
 
+> November 17 update: repeated letters now travel through CENTER. Both serial
+> bridges allow up to 900 seconds for movement. Follow the
+> [repeat-letter update guide](REPEAT_LETTER_UPDATE.md) for firmware upload,
+> software updates, and physical tests. Earlier notes below about unchanged
+> firmware describe the original Ollama migration, before this motion update.
+
 Implemented in `motion-llm-board` on `migration/offline-llm`. The sibling fork was read as reference, especially its native Ollama generate request. Its replacement audio capture, arithmetic/spelling rules, new word banks and alternate serial implementation were not copied. The maintained runtime keeps the original decision logic and hardware behavior.
 
 Default model: **llama3.2:3b**, a text instruction model whose Ollama tag is approximately 2.0 GB (Q4_K_M). This is a reasonable starting point for a Pi 5 with 8 GB or more RAM, not a measured performance guarantee. Runtime memory exceeds download size. On a 4 GB Pi, or when latency/memory is problematic, try `llama3.2:1b`. Keep context at 2048 and close other heavy applications. Pi CPU generation and cold loading can be slow; no Pi benchmark has been performed here. Model choice is configuration, not a code change.

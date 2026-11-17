@@ -75,7 +75,7 @@ class OuijaBridge:
         except Exception:
             return None
 
-    def send_command(self, command: str, wait_done: bool = True, timeout: float = 120.0) -> list[str]:
+    def send_command(self, command: str, wait_done: bool = True, timeout: float = 900.0) -> list[str]:
         """
         Sends one command to Arduino and collects responses.
 
