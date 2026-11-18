@@ -296,7 +296,7 @@ def listen_question_near_realtime(
             proc.stdout.close()
 
     if not speaking:
-        return ""
+        return AudioResult("SILENCE") if automatic else ""
     with tempfile.TemporaryDirectory() as td:
         wav_path = os.path.join(td, "question.wav")
         with wave.open(wav_path, "wb") as wf:

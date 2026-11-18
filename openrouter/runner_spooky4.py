@@ -34,6 +34,7 @@ load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 from openrouter.pi_whispercpp_v4 import listen_question_near_realtime
 from openrouter import pi_whispercpp_v4 as audio
+from openrouter.status import publish_status
 
 from openrouter.wordbanks_spooky3 import (
     YES_NO,
@@ -477,7 +478,12 @@ def main(auto_listen=False):
         if auto_listen:
             previous_handler = signal.signal(signal.SIGTERM, stop_automatic_service)
             check_automatic_dependencies()
-        _run_board(auto_listen)
+        try:
+            _run_board(auto_listen)
+        except Exception as exc:
+            if auto_listen:
+                publish_status("ERROR", board="UNKNOWN", detail=str(exc))
+            raise
     finally:
         if previous_handler is not None:
             signal.signal(signal.SIGTERM, previous_handler)
@@ -486,6 +492,8 @@ def main(auto_listen=False):
 
 
 def _run_board(auto_listen):
+    if auto_listen:
+        publish_status("STARTING", board="CHECKING", detail="Starting automatic listener")
     if auto_listen:
         print(f"[AUTO START] Microphone: {audio.USB_MIC_ALSA}", flush=True)
     print(f"[LLM] Local Ollama: {MODEL_NAME} at {OLLAMA_URL}")
@@ -504,6 +512,8 @@ def _run_board(auto_listen):
             if auto_listen and not hw.ready:
                 raise RuntimeError("Arduino did not confirm READY_AT_CENTER")
             print("[HW] Ready")
+            if auto_listen:
+                publish_status("READY", board="READY", detail="Arduino homed")
         except Exception as e:
             print(f"[HW] FAILED: {e}")
             if hw:
@@ -531,6 +541,8 @@ def _run_board(auto_listen):
                 if not text:
                     continue
             else:
+                if auto_listen:
+                    publish_status("LISTENING", board="READY")
                 try:
                     text = listen_question_near_realtime(
                         max_seconds=14.0,
@@ -546,11 +558,18 @@ def _run_board(auto_listen):
                 except Exception as e:
                     print(f"[MIC ERROR] {e}")
                     if auto_listen:
+                        publish_status("ERROR", board="READY", detail=str(e))
                         raise  # Service retries with a delay; a broken mic is not silence.
                     continue
 
                 if auto_listen:
                     if text.status != "SPEECH":
+                        display_status = {
+                            "SILENCE": "LISTENING",
+                            "BACKGROUND_NOISE": "BACKGROUND_NOISE",
+                            "TRANSCRIPTION_ERROR": "ERROR",
+                        }.get(text.status, "ERROR")
+                        publish_status(display_status, board="READY", detail=text.reason)
                         if time.monotonic() - noise_log_at >= 10:
                             print(f"[AUDIO] {text.status}: {text.reason}", flush=True)
                             noise_log_at = time.monotonic()
@@ -558,6 +577,9 @@ def _run_board(auto_listen):
                             time.sleep(5)
                         continue
                     text = text.text
+
+                if auto_listen:
+                    publish_status("THINKING", heard=text, board="READY")
 
                 if not text:
                     print("[NO SPEECH] Try again.")
@@ -570,10 +592,14 @@ def _run_board(auto_listen):
             spell_target = extract_spell_target(text)
             if spell_target:
                 print(f"[MODE] SPELL\n[RESPONSE] {spell_target}\n[SOURCE] rules")
+                if auto_listen:
+                    publish_status("MOVING", heard=text, response=spell_target, board="MOVING")
                 if hw:
                     try:
                         hw.spell_text(spell_target)
                         last_response = spell_target
+                        if auto_listen:
+                            publish_status("RESPONSE_READY", heard=text, response=spell_target, board="READY")
                     except Exception as e:
                         print(f"[HW ERROR] {e}")
                         if auto_listen:
@@ -583,10 +609,14 @@ def _run_board(auto_listen):
             policy_response = personal_or_presence_response(text)
             if policy_response == "WAIT":
                 print("[MODE] PERSONAL_UNKNOWN\n[RESPONSE] WAIT\n[SOURCE] rules")
+                if auto_listen:
+                    publish_status("MOVING", heard=text, response="WAIT", board="MOVING")
                 if hw:
                     try:
                         hw.spell_text("WAIT")
                         last_response = "WAIT"
+                        if auto_listen:
+                            publish_status("RESPONSE_READY", heard=text, response="WAIT", board="READY")
                     except Exception as e:
                         print(f"[HW ERROR] {e}")
                         if auto_listen:
@@ -599,6 +629,8 @@ def _run_board(auto_listen):
             if mode == "YES_NO":
                 ans = answer_yes_no(text)
                 print(f"[RESPONSE] {ans}")
+                if auto_listen:
+                    publish_status("MOVING", heard=text, response=ans, board="MOVING")
 
                 if hw:
                     try:
@@ -612,6 +644,8 @@ def _run_board(auto_listen):
                         # Arduino handles SPELL YES and SPELL NO as special direct targets.
                         hw.spell_text(ans)
                         last_response = ans
+                        if auto_listen:
+                            publish_status("RESPONSE_READY", heard=text, response=ans, board="READY")
 
                     except Exception as e:
                         print(f"[HW ERROR] {e}")
@@ -621,11 +655,15 @@ def _run_board(auto_listen):
             else:
                 word = pick_one_word(text)
                 print(f"[RESPONSE] {word}")
+                if auto_listen:
+                    publish_status("MOVING", heard=text, response=word, board="MOVING")
 
                 if hw:
                     try:
                         hw.spell_text(word)
                         last_response = word
+                        if auto_listen:
+                            publish_status("RESPONSE_READY", heard=text, response=word, board="READY")
                     except Exception as e:
                         print(f"[HW ERROR] {e}")
                         if auto_listen:
@@ -633,6 +671,8 @@ def _run_board(auto_listen):
 
     except KeyboardInterrupt:
         print("\n[EXIT] Stopped by user")
+        if auto_listen:
+            publish_status("STOPPED", board="UNKNOWN", detail="Listener stopped")
 
     finally:
         if hw:

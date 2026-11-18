@@ -18,6 +18,7 @@ env/
 # Logs
 *.log
 .ouija.lock
+data/ouija_status.json
 
 # Secrets
 .env

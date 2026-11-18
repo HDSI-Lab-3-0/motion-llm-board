@@ -3,6 +3,10 @@
 Automatic mode runs independently of terminals and desktop login. Code comments
 marked `AUTOMATIC START` identify this feature. Manual mode remains available.
 
+The optional display is a separate Tkinter window with a yellow background and
+the title `OUIJAI`. It reads `data/ouija_status.json`; the listener continues to
+work if the display is closed.
+
 ## 1. Install and configure on the Pi
 
 Finish the existing [Pi setup](OLLAMA_MIGRATION_AND_PI_SETUP.md), then run from
@@ -88,7 +92,46 @@ It now starts without a terminal or login. Failed startup/device checks restart
 after ten seconds. Movement failures stop the process instead of replaying an
 uncertain command. Service restarts reconnect and home before accepting questions.
 
-## 4. Verify and maintain
+## 4. Add the Pi display
+
+The display requires Raspberry Pi OS with a graphical desktop and automatic
+desktop login. It uses the same project `.venv`; no second environment is
+needed. Install the updated code and dependencies first:
+
+```bash
+cd ~/motion-llm-board
+git pull --ff-only
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+```
+
+Replace `YOUR_USER` in `deploy/ouijai-ui.desktop` with `robotflower` (or the
+value from `whoami`), then install it for the logged-in desktop user:
+
+```bash
+mkdir -p ~/.config/autostart
+cp deploy/ouijai-ui.desktop ~/.config/autostart/ouijai-ui.desktop
+```
+
+The file should contain:
+
+```ini
+Exec=/home/robotflower/motion-llm-board/.venv/bin/python /home/robotflower/motion-llm-board/ui/ouijai_display.py
+```
+
+Test it before rebooting:
+
+```bash
+/home/robotflower/motion-llm-board/.venv/bin/python ui/ouijai_display.py
+```
+
+Press `Esc` to close the test window. The normal automatic listener remains a
+systemd service. On the next desktop login the yellow `OUIJAI` display opens
+automatically. It shows `LISTENING`, `THINKING`, `MOVING`, the latest heard
+question, and the response. A stale or missing status file shows `SERVICE NOT
+RUNNING`.
+
+## 5. Verify and maintain
 
 Test prolonged silence, brief bumps, fans, unclear speech, clear short questions,
 natural pauses, repeated answers, missing peripherals, and reboot without login.

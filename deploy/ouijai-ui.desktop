@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Ouijai Display
+Comment=AUTOMATIC START: show Ouijai listening status
+Exec=/home/YOUR_USER/motion-llm-board/.venv/bin/python /home/YOUR_USER/motion-llm-board/ui/ouijai_display.py
+Terminal=false
+X-GNOME-Autostart-enabled=true
