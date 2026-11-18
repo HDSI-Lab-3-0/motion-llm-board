@@ -16,6 +16,8 @@ speech -> Whisper -> local Ollama / wordbank -> Arduino command
 """
 
 import os
+import argparse
+import signal
 import time
 from pathlib import Path
 import random
@@ -31,6 +33,7 @@ from openrouter.response_policy import personal_or_presence_response
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 from openrouter.pi_whispercpp_v4 import listen_question_near_realtime
+from openrouter import pi_whispercpp_v4 as audio
 
 from openrouter.wordbanks_spooky3 import (
     YES_NO,
@@ -96,7 +99,7 @@ class OuijaArduinoBridge:
         # Opening serial often resets Arduino.
         # Your Arduino auto-runs HOMEALL on startup, so wait for it.
         time.sleep(2)
-        self.flush_startup(timeout_s=15)
+        self.ready = self.flush_startup(timeout_s=120 if getattr(self, "strict_automatic", False) else 15)
 
     def flush_startup(self, timeout_s=15):
         start = time.time()
@@ -109,11 +112,11 @@ class OuijaArduinoBridge:
 
                 if "READY_AT_CENTER" in line:
                     print("[HW] Arduino ready at center.")
-                    return
+                    return True
 
                 if "ERR AUTO_HOME_FAILED" in line:
                     print("[HW] Arduino auto-home failed.")
-                    return
+                    return False
 
     def read_line(self):
         if not self.ser:
@@ -147,6 +150,8 @@ class OuijaArduinoBridge:
             responses.append(line)
 
             if line.startswith("ERR"):
+                if getattr(self, "strict_automatic", False):
+                    raise RuntimeError(f"Arduino rejected command: {line}")
                 break
 
             if not wait_done:
@@ -164,6 +169,11 @@ class OuijaArduinoBridge:
             elif line in ("READY_AT_CENTER", "OK HOMEALL"):
                 break
 
+        # AUTOMATIC START: uncertain completion must not be treated as success.
+        if getattr(self, "strict_automatic", False) and wait_done:
+            completed = any(line == "OK SPELL_DONE" for line in responses) if command.upper().startswith("SPELL") else any(line.startswith("DONE") or line in ("READY_AT_CENTER", "OK HOMEALL") for line in responses)
+            if not completed:
+                raise TimeoutError("Arduino command completion not confirmed; command will not be replayed")
         return responses
 
     def spell_text(self, text):
@@ -436,11 +446,51 @@ Question: {question.strip()}
 # MAIN
 # =====================================================
 
-def main():
+def check_automatic_dependencies():
+    # AUTOMATIC START: service ordering alone does not mean the model is ready.
+    cli = Path(audio.WHISPERCPP_DIR) / "build/bin/whisper-cli"
+    if not cli.is_file() or not Path(audio.MODEL_PATH).is_file():
+        raise RuntimeError("Whisper executable or model is missing")
+    import webrtcvad  # Fail clearly before claiming readiness if not installed.
+    url = OLLAMA_URL.rsplit("/api/", 1)[0] + "/api/tags"
+    reply = requests.get(url, timeout=10)
+    reply.raise_for_status()
+    names = {m.get("name") for m in reply.json().get("models", [])}
+    if MODEL_NAME not in names:
+        raise RuntimeError(f"Ollama model not installed: {MODEL_NAME}")
+
+
+def stop_automatic_service(signum, frame):
+    # AUTOMATIC START: unwind capture's finally blocks on systemctl stop.
+    raise KeyboardInterrupt
+
+
+def main(auto_listen=False):
+    # AUTOMATIC START: exclusive ownership applies to manual and service launches.
+    lock = None
+    if os.name == "posix":
+        import fcntl
+        lock = open(Path(__file__).resolve().parents[1] / ".ouija.lock", "a")
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    previous_handler = None
+    try:
+        if auto_listen:
+            previous_handler = signal.signal(signal.SIGTERM, stop_automatic_service)
+            check_automatic_dependencies()
+        _run_board(auto_listen)
+    finally:
+        if previous_handler is not None:
+            signal.signal(signal.SIGTERM, previous_handler)
+        if lock:
+            lock.close()
+
+
+def _run_board(auto_listen):
+    if auto_listen:
+        print(f"[AUTO START] Microphone: {audio.USB_MIC_ALSA}", flush=True)
     print(f"[LLM] Local Ollama: {MODEL_NAME} at {OLLAMA_URL}")
-    print("[OUJIA] Press ENTER to listen.")
-    print("       Type 'q' + ENTER to quit.")
-    print("       Type 't' + ENTER for typed test mode.\n")
+    if not auto_listen:
+        print("[OUJIA] Press ENTER to listen; 'q' to quit; 't' for typed mode.")
 
     hw = None
 
@@ -448,17 +498,30 @@ def main():
         try:
             print("[HW] Connecting...")
             hw = OuijaArduinoBridge(port=SERIAL_PORT, baud=SERIAL_BAUD)
+            hw.strict_automatic = auto_listen
             hw.connect()
+            # AUTOMATIC START: require positive homing acknowledgement.
+            if auto_listen and not hw.ready:
+                raise RuntimeError("Arduino did not confirm READY_AT_CENTER")
             print("[HW] Ready")
         except Exception as e:
             print(f"[HW] FAILED: {e}")
+            if hw:
+                hw.close()
+            if auto_listen:
+                raise
             hw = None
 
     last_response = None
 
     try:
+        noise_log_at = 0.0
+        calibration_state = {}
         while True:
-            cmd = input("\n[READY] Press ENTER to listen, 't' to type, or 'q' to quit: ").strip().lower()
+            # AUTOMATIC START: no stdin, no terminal, and no listening during movement.
+            if auto_listen:
+                time.sleep(float(os.getenv("OUIJA_AUTO_SETTLE_SECONDS", "1")))
+            cmd = "" if auto_listen else input("\n[READY] Press ENTER to listen, 't' to type, or 'q' to quit: ").strip().lower()
 
             if cmd == "q":
                 break
@@ -476,11 +539,25 @@ def main():
                         calibrate_chunks=4,
                         max_total_chunks=56,
                         min_speech_chunks=1,
-                        debug_rms=False
+                        debug_rms=False,
+                        automatic=auto_listen,
+                        calibration_state=calibration_state,
                     )
                 except Exception as e:
                     print(f"[MIC ERROR] {e}")
+                    if auto_listen:
+                        raise  # Service retries with a delay; a broken mic is not silence.
                     continue
+
+                if auto_listen:
+                    if text.status != "SPEECH":
+                        if time.monotonic() - noise_log_at >= 10:
+                            print(f"[AUDIO] {text.status}: {text.reason}", flush=True)
+                            noise_log_at = time.monotonic()
+                        if text.status == "TRANSCRIPTION_ERROR":
+                            time.sleep(5)
+                        continue
+                    text = text.text
 
                 if not text:
                     print("[NO SPEECH] Try again.")
@@ -499,6 +576,8 @@ def main():
                         last_response = spell_target
                     except Exception as e:
                         print(f"[HW ERROR] {e}")
+                        if auto_listen:
+                            raise
                 continue
 
             policy_response = personal_or_presence_response(text)
@@ -510,6 +589,8 @@ def main():
                         last_response = "WAIT"
                     except Exception as e:
                         print(f"[HW ERROR] {e}")
+                        if auto_listen:
+                            raise
                 continue
 
             mode = "YES_NO" if policy_response == "YES" else classify_mode(text)
@@ -534,6 +615,8 @@ def main():
 
                     except Exception as e:
                         print(f"[HW ERROR] {e}")
+                        if auto_listen:
+                            raise
 
             else:
                 word = pick_one_word(text)
@@ -545,6 +628,8 @@ def main():
                         last_response = word
                     except Exception as e:
                         print(f"[HW ERROR] {e}")
+                        if auto_listen:
+                            raise
 
     except KeyboardInterrupt:
         print("\n[EXIT] Stopped by user")
@@ -555,4 +640,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--auto-listen", action="store_true", help="AUTOMATIC START: listen without keyboard input")
+    main(auto_listen=parser.parse_args().auto_listen)

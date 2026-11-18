@@ -17,6 +17,7 @@ env/
 
 # Logs
 *.log
+.ouija.lock
 
 # Secrets
 .env

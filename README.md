@@ -4,6 +4,8 @@ The maintained runtime targets Raspberry Pi 5, a USB microphone, and the existin
 
 ## Install and run
 
+For boot startup and hands-free listening, follow [Automatic start on Raspberry Pi](AUTOMATIC_START.md).
+
 Use Python 3.10–3.12 and **one dependency file**, [requirements.txt](requirements.txt), inside a venv. Ollama, whisper.cpp, and ALSA are separate system tools.
 
 Follow [OLLAMA_MIGRATION_AND_PI_SETUP.md](OLLAMA_MIGRATION_AND_PI_SETUP.md) for the complete clone, installation, model, microphone, serial, testing, and troubleshooting instructions.

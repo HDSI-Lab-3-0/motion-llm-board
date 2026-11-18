@@ -88,12 +88,13 @@ class MigrationTests(unittest.TestCase):
         for name in names:
             old = next(n for n in before.body if getattr(n, 'name', '') == name)
             new = next(n for n in after.body if getattr(n, 'name', '') == name)
-            # Center round trips require a longer command deadline. Preserve
-            # the remaining bridge behavior while allowing this intended change.
+            # AUTOMATIC START: readiness and strict completion checks deliberately
+            # change these methods; behavior is covered by test_automatic_start.
+            # Keep AST preservation checks for the remaining bridge methods.
             if name == 'OuijaArduinoBridge':
                 for node in (old, new):
-                    method = next(n for n in node.body if getattr(n, 'name', '') == 'send_command')
-                    method.args.defaults[-1] = ast.Constant(value=900)
+                    node.body = [n for n in node.body if getattr(n, 'name', '') not in
+                                 {'connect', 'flush_startup', 'send_command'}]
             for n in ast.walk(old):
                 if isinstance(n, ast.Name) and n.id == 'openrouter_completion':
                     n.id = 'ollama_completion'

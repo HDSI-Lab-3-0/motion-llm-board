@@ -1,0 +1,21 @@
+# AUTOMATIC START: replace YOUR_USER and /home/YOUR_USER/motion-llm-board.
+[Unit]
+Description=Ouija automatic listening board
+Wants=ollama.service
+After=ollama.service sound.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=YOUR_USER
+SupplementaryGroups=audio dialout
+WorkingDirectory=/home/YOUR_USER/motion-llm-board
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/YOUR_USER/motion-llm-board/.venv/bin/python -m openrouter.runner_spooky4 --auto-listen
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=10
+KillMode=control-group
+
+[Install]
+WantedBy=multi-user.target

@@ -192,7 +192,7 @@ If recording lists card 2/device 0, set `OUIJA_USB_MIC_ALSA=plughw:2,0`. This is
 | OUIJA_OLLAMA_CONTEXT | 2048 | Context token limit, positive integer |
 | OUIJA_HARDWARE_ENABLED | false in template | true/1/yes enables serial; absent setting preserves original enabled default |
 | OUIJA_SERIAL_PORT | /dev/ttyACM0 | Actual board USB serial port |
-| OUIJA_USB_MIC_ALSA | plughw:3,0 | ALSA capture device |
+| OUIJA_USB_MIC_ALSA | plughw:2,0 | ALSA capture device; verify on your Pi |
 | OUIJA_WHISPERCPP_DIR | ~/whisper.cpp | Directory containing build/bin/whisper-cli |
 | OUIJA_WHISPER_MODEL | ~/whisper.cpp/models/ggml-tiny.en.bin | Speech model path |
 

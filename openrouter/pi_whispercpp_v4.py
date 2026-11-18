@@ -8,6 +8,8 @@ import audioop
 import time
 import queue
 import threading
+from collections import deque
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Optional, List
 
@@ -15,7 +17,7 @@ from typing import Optional, List
 # AUDIO / WHISPER CONFIG
 # =====================================================
 
-USB_MIC_ALSA = os.getenv("OUIJA_USB_MIC_ALSA", "plughw:3,0")
+USB_MIC_ALSA = os.getenv("OUIJA_USB_MIC_ALSA", "plughw:2,0")
 WHISPERCPP_DIR = os.path.expanduser(os.getenv("OUIJA_WHISPERCPP_DIR", "~/whisper.cpp"))
 MODEL_PATH = os.path.expanduser(os.getenv("OUIJA_WHISPER_MODEL", os.path.join(WHISPERCPP_DIR, "models", "ggml-tiny.en.bin")))
 
@@ -148,6 +150,8 @@ def listen_question_near_realtime(
     min_speech_chunks: int = 1,
     max_total_chunks: int = 30,
     debug_rms: bool = False,
+    automatic: bool = False,
+    calibration_state=None,
 ) -> str:
     """
     Continuously captures audio, then transcribes the complete question.
@@ -160,6 +164,16 @@ def listen_question_near_realtime(
     if chunk_s <= 0 or max_seconds <= 0 or max_total_chunks <= 0:
         raise ValueError("Recording duration and chunk limits must be positive")
 
+    # AUTOMATIC START: wait continuously for speech using 20 ms WebRTC VAD frames.
+    # Manual capture retains its existing timing and return type.
+    vad = None
+    if automatic:
+        import webrtcvad
+        vad = webrtcvad.Vad(2)
+        chunk_s = .02
+        silence_chunks_to_stop = 50
+        min_speech_chunks = 10
+        calibrate_chunks = 50
     started = time.monotonic()
 
     def event(message):
@@ -206,31 +220,67 @@ def listen_question_near_realtime(
         try:
             noise_samples = []
             # Even without calibration, verify actual PCM arrives before readiness.
-            for _ in range(max(1, calibrate_chunks)):
+            cached = automatic and calibration_state is not None and "noise_rms" in calibration_state
+            for _ in range(1 if cached else max(1, calibrate_chunks)):
                 noise_samples.append(audioop.rms(next_block(), 2))
             noise_samples.sort()
-            noise_rms = noise_samples[len(noise_samples) // 2] if calibrate_chunks else 0
+            noise_rms = calibration_state["noise_rms"] if cached else (noise_samples[len(noise_samples) // 2] if calibrate_chunks else 0)
+            if automatic and calibration_state is not None:
+                # AUTOMATIC START: reuse calibration across answers instead of a deaf
+                # one-second calibration window on every return to listening.
+                calibration_state["noise_rms"] = noise_rms
             start_threshold = max(200, min(1500, int(noise_rms * start_mult + start_offset)))
             stop_threshold = max(150, min(start_threshold - 50, int(noise_rms * stop_mult + stop_offset)))
             event("Listening - speak now")
             heard = silent = 0
             speaking = False
+            quiet_frames = 0
             frames_left = max(1, int(max_seconds * rate))
-            for i in range(min(max_total_chunks, int(max_seconds / chunk_s) + 1)):
+            preroll = deque(maxlen=15)
+            i = 0
+            while automatic or i < min(max_total_chunks, int(max_seconds / chunk_s) + 1):
+                i += 1
                 data = next_block()[:frames_left * 2]
-                frames_left -= len(data) // 2
                 rms = audioop.rms(data, 2)
+                if automatic and not speaking:
+                    quiet_frames = quiet_frames + 1 if rms == 0 else 0
+                    if quiet_frames == 3000:
+                        event("Audio is arriving but has been all-zero for 60 seconds; check mute/device with a recording test")
                 is_speech = rms >= (stop_threshold if speaking else start_threshold)
+                if vad is not None:
+                    is_speech = is_speech and vad.is_speech(data, rate)
+                    if not speaking and not is_speech and rms < start_threshold:
+                        # Slowly track quiet room changes; never learn loud motor noise.
+                        noise_rms = .995 * noise_rms + .005 * rms
+                        start_threshold = max(200, min(1500, int(noise_rms * start_mult + start_offset)))
+                        stop_threshold = max(150, min(start_threshold - 50, int(noise_rms * stop_mult + stop_offset)))
+                        if calibration_state is not None:
+                            calibration_state["noise_rms"] = noise_rms
                 # Keep leading audio and pauses so words are never cut at VAD boundaries.
-                captured.append(data)
+                if automatic and not speaking:
+                    preroll.append(data)
+                    if is_speech:
+                        captured.extend(preroll)
+                else:
+                    captured.append(data)
                 if is_speech:
                     speaking = True
                     heard += 1
                     silent = 0
-                elif speaking and heard >= min_speech_chunks:
+                elif speaking:
                     silent += 1
                     if silent >= silence_chunks_to_stop:
+                        if automatic and heard < min_speech_chunks:
+                            # AUTOMATIC START: reject clicks and brief noise without Whisper.
+                            captured.clear()
+                            preroll.clear()
+                            speaking = False
+                            heard = silent = 0
+                            frames_left = max(1, int(max_seconds * rate))
+                            continue
                         break
+                if speaking or not automatic:
+                    frames_left -= len(data) // 2
                 if frames_left <= 0:
                     break
             event("Captured")
@@ -254,6 +304,31 @@ def listen_question_near_realtime(
             wf.setsampwidth(2)
             wf.setframerate(rate)
             wf.writeframes(b"".join(captured))
-        text = re.sub(r"\s+", " ", transcribe_wav(wav_path).strip())
+        try:
+            text = re.sub(r"\s+", " ", transcribe_wav(wav_path).strip())
+        except Exception as exc:
+            if automatic:
+                return AudioResult("TRANSCRIPTION_ERROR", reason=str(exc))
+            raise
         event("Transcribed")
-        return text
+        return validate_transcript(text) if automatic else text
+
+
+# AUTOMATIC START: rejected audio never becomes a word-bank/model question.
+@dataclass(frozen=True)
+class AudioResult:
+    status: str
+    text: str = ""
+    reason: str = ""
+
+
+def validate_transcript(text):
+    cleaned = re.sub(r"\[[^\]]*\]|\([^)]*\)|<\|[^|]*\|>", "", text).strip()
+    if not re.search(r"[a-zA-Z]", cleaned):
+        return AudioResult("BACKGROUND_NOISE", reason="No intelligible transcript")
+    if cleaned.lower().strip(" .!?") in {"inaudible", "unintelligible", "background noise", "silence", "music", "blank_audio"}:
+        return AudioResult("BACKGROUND_NOISE", reason="Non-speech annotation")
+    words = cleaned.lower().split()
+    if len(words) >= 6 and len(set(words)) == 1:
+        return AudioResult("BACKGROUND_NOISE", reason="Repetitive transcription artifact")
+    return AudioResult("SPEECH", text=cleaned)
