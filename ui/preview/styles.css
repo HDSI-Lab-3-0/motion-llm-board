@@ -1,0 +1,14 @@
+:root { --yellow: #f4c542; --dark: #211a0d; }
+* { box-sizing: border-box; }
+html, body { width: 100%; min-height: 100%; margin: 0; }
+body { background: var(--yellow); color: var(--dark); font-family: "DejaVu Sans", Arial, sans-serif; }
+.display { min-height: 100vh; padding: 35px 70px 20px; display: flex; flex-direction: column; align-items: stretch; }
+h1 { margin: 0 0 15px; text-align: center; font-size: 52px; line-height: 1.1; font-weight: 700; }
+.status { margin: 15px 0; text-align: center; font-size: 28px; line-height: 1.2; font-weight: 700; }
+.field, .response { width: 100%; margin: 15px 0; text-align: left; overflow-wrap: anywhere; }
+.field, .response { font-size: 26px; line-height: 1.35; font-weight: 700; }
+.response { font-weight: 700; }
+.field span, .response span { display: inline-block; margin-top: 2px; }
+.board { margin: 15px 0; text-align: center; font-size: 16px; }
+.detail { min-height: 22px; margin: 5px 0; text-align: center; font-size: 13px; }
+@media (max-width: 700px) { .display { padding: 24px 28px 16px; } h1 { font-size: 42px; } .status { font-size: 24px; } .field, .response { font-size: 22px; } }

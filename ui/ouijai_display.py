@@ -24,14 +24,14 @@ class OuijaiDisplay:
         root.bind("<Escape>", lambda _event: root.destroy())
 
         self.title = tk.Label(root, text="OUIJAI", bg=YELLOW, fg=DARK,
-                              font=("DejaVu Sans", 38, "bold"))
+                              font=("DejaVu Sans", 52, "bold"))
         self.title.pack(pady=(35, 15))
-        self.status = tk.Label(root, text="STARTING...", bg=YELLOW, fg=DARK,
+        self.status = tk.Label(root, text="CALIBRATING...", bg=YELLOW, fg=DARK,
                                font=("DejaVu Sans", 28, "bold"))
         self.status.pack(pady=15)
         self.heard = tk.Label(root, text="Heard:\n—", bg=YELLOW, fg=DARK,
                               justify="left", anchor="w", wraplength=850,
-                              font=("DejaVu Sans", 20))
+                              font=("DejaVu Sans", 26, "bold"))
         self.heard.pack(fill="x", padx=70, pady=15)
         self.response = tk.Label(root, text="Response:\n—", bg=YELLOW, fg=DARK,
                                  justify="left", anchor="w", wraplength=850,
@@ -58,6 +58,12 @@ class OuijaiDisplay:
             data = {"status": "SERVICE NOT RUNNING", "detail": "Automatic listener is unavailable"}
 
         current = str(data.get("status", "UNKNOWN")).replace("_", " ")
+        current = {
+            "STARTING": "CALIBRATING",
+            "THINKING": "RESPONDING",
+            "MOVING": "RESPONDING",
+            "RESPONSE READY": "RESPONDING",
+        }.get(current, current)
         self.status.configure(text=current, fg=ERROR if "ERROR" in current or "NOT RUNNING" in current else DARK)
         self.heard.configure(text=f"Heard:\n{data.get('heard') or '—'}")
         self.response.configure(text=f"Response:\n{data.get('response') or '—'}")
