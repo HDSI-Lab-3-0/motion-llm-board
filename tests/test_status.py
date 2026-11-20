@@ -55,3 +55,11 @@ class StatusTests(unittest.TestCase):
             self.assertEqual(payload["status"], "LISTENING")
             self.assertEqual(payload["board"], "READY")
             self.assertIn("updated_at", payload)
+
+    def test_ready_states_drive_led_on(self):
+        from openrouter.gpio_status_led import StatusLed
+        led = StatusLed.__new__(StatusLed)
+        led.pin = 17
+        led._gpio = Mock()
+        led.set_status("RESPONSE_READY")
+        led._gpio.output.assert_called_once_with(led.pin, led._gpio.HIGH)

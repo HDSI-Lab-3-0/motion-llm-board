@@ -34,7 +34,7 @@ class StatusLed:
 
     def set_status(self, status):
         """Turn on only when the board can accept a spoken question."""
-        self.set_on(str(status).upper() in {"READY", "LISTENING"})
+        self.set_on(str(status).upper() in {"READY", "LISTENING", "RESPONSE_READY"})
 
     def close(self):
         self.set_on(False)

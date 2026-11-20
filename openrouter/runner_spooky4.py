@@ -52,10 +52,10 @@ def publish_status(status, **fields):
     global _response_source
     if status in {"THINKING", "LISTENING", "STARTING"}:
         _response_source = ""
-    if status == "MOVING":
+    if status in {"READY", "LISTENING", "RESPONSE_READY", "MOVING", "THINKING", "ERROR", "STOPPED"}:
         status_led = globals().get("_active_status_led")
         if status_led:
-            status_led.set_status("MOVING")
+            status_led.set_status(status)
     write_status(status, source=_response_source, **fields)
 
 
