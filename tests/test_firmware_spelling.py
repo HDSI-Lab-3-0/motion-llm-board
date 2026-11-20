@@ -94,7 +94,8 @@ int main() {
  check("AAAAAAAAAAAAAAAAAAA",18);
  for(char c='A'; c<='Z'; ++c) { char s[]={c,c,0}; check(s,1); }
  check("A",0); check("A",0);
- moves.clear(); char digits[]="11"; spellWord(digits); assert(moves.size()==2);
+ moves.clear(); char digits[]="11"; spellWord(digits); assert(moves.size()==3);
+ assert(moves[1].x==xCenterMm && moves[1].y==yCenterMm);
  moves.clear(); char four[]="FOUR"; spellWord(four); assert(moves.size()==1);
  moves.clear(); char yes[]="YES"; spellWord(yes); assert(moves.size()==1);
  moves.clear(); char no[]="NO"; spellWord(no); assert(moves.size()==1);

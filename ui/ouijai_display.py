@@ -61,14 +61,17 @@ class OuijaiDisplay:
         current = {
             "STARTING": "CALIBRATING",
             "THINKING": "RESPONDING",
-            "MOVING": "RESPONDING",
-            "RESPONSE READY": "RESPONDING",
+            "MOVING": "MOVING",
+            "RESPONSE READY": "RESPONSE COMPLETE",
         }.get(current, current)
         self.status.configure(text=current, fg=ERROR if "ERROR" in current or "NOT RUNNING" in current else DARK)
         self.heard.configure(text=f"Heard:\n{data.get('heard') or '—'}")
         self.response.configure(text=f"Response:\n{data.get('response') or '—'}")
         self.board.configure(text=f"Board: {data.get('board') or '—'}")
-        self.detail.configure(text=data.get("detail") or "")
+        self.detail.configure(text="\n".join(filter(None, [
+            "Source: " + data["source"] if data.get("source") else "",
+            data.get("detail") or "",
+        ])))
         self.root.after(250, self.poll)
 
 

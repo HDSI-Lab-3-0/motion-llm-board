@@ -32,8 +32,8 @@ float yMaxMm = 40.0;
 float yHomeSwitchMm = -33.0;
 float xHomeSwitchMm = -9.0;
 
-// Resting visual center after homing
-float xCenterMm = -7.0;
+// Resting center between T/U and 5/6; physically verify after flashing
+float xCenterMm = -4.5;
 float yCenterMm = 3.0;
 
 // Motion tuning
@@ -720,7 +720,7 @@ bool repeatLetterDeparture(char c) {
     Serial.println(F("ERR repeat_position_unknown"));
     return false;
   }
-  if (!findLetter(c, x, y)) {
+  if (!findLetter(c, x, y) && !findNumber(c, x, y)) {
     Serial.println(F("ERR repeat_letter_unknown"));
     return false;
   }
@@ -753,7 +753,10 @@ bool spellToken(char *token) {
     char c = token[i];
 
     if (c >= '0' && c <= '9') {
+      bool repeated = i > 0 && token[i - 1] == c;
+      if (repeated && !repeatLetterDeparture(c)) return false;
       moveNumberChar(c);
+      if (repeated) delay(repeatLetterPauseMs);
     } else if (c >= 'A' && c <= 'Z') {
       bool repeated = i > 0 && token[i - 1] == c;
       if (repeated && !repeatLetterDeparture(c)) return false;

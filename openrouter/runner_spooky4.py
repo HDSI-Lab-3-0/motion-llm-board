@@ -28,13 +28,15 @@ from serial.tools import list_ports
 from dotenv import load_dotenv
 from openrouter.spelling import extract_spell_target
 from openrouter.response_policy import personal_or_presence_response
+from openrouter.routing import direct_response, normalize, select_bank, matches, offered_choices
+from contextlib import nullcontext
 
 # Load before importing speech settings; explicit shell variables take precedence.
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 from openrouter.pi_whispercpp_v4 import listen_question_near_realtime
 from openrouter import pi_whispercpp_v4 as audio
-from openrouter.status import publish_status
+from openrouter.status import publish_status as write_status, status_heartbeat, publish_progress
 from openrouter.gpio_status_led import create_status_led
 
 from openrouter.wordbanks_spooky3 import (
@@ -42,6 +44,20 @@ from openrouter.wordbanks_spooky3 import (
     KEYWORDS,
     WORD_BANKS,
 )
+
+_response_source = ""
+
+
+def publish_status(status, **fields):
+    global _response_source
+    if status in {"THINKING", "LISTENING", "STARTING"}:
+        _response_source = ""
+    if status == "MOVING":
+        status_led = globals().get("_active_status_led")
+        if status_led:
+            status_led.set_status("MOVING")
+    write_status(status, source=_response_source, **fields)
+
 
 # =====================================================
 # CONFIG
@@ -137,6 +153,8 @@ class OuijaArduinoBridge:
             return []
 
         print(f"[HW >>] {command}")
+        if getattr(self, "strict_automatic", False):
+            publish_progress("Command sent: " + command + " · awaiting completion")
         self.ser.write((command + "\n").encode())
 
         responses = []
@@ -150,6 +168,8 @@ class OuijaArduinoBridge:
 
             print(f"[HW <<] {line}")
             responses.append(line)
+            if getattr(self, "strict_automatic", False):
+                publish_progress("Arduino: " + line)
 
             if line.startswith("ERR"):
                 if getattr(self, "strict_automatic", False):
@@ -179,7 +199,7 @@ class OuijaArduinoBridge:
         return responses
 
     def spell_text(self, text):
-        word = sanitize_word(text)
+        word = re.sub(r"[^A-Za-z0-9 ]", "", text or "").strip().upper()
 
         if not word:
             print("[HW] No valid word to spell.")
@@ -253,10 +273,12 @@ def ollama_completion(prompt: str, max_tokens: int = 8, temperature: float = 0.2
 # =====================================================
 
 def classify_mode(question: str) -> str:
-    q = (question or "").lower().strip()
+    q = normalize(question or "")
+    if offered_choices(q):
+        return "ONE_WORD"
 
     # YES/NO questions should move directly to YES or NO.
-    looks_yesno = q.endswith("?") or q.startswith((
+    looks_yesno = q.startswith((
         "is ", "are ", "am ", "do ", "does ", "did ",
         "should ", "can ", "could ", "will ", "would ",
         "was ", "were ", "have ", "has "
@@ -310,7 +332,9 @@ Question:
 # =====================================================
 
 def answer_yes_no(question: str) -> str:
-    q = (question or "").lower().strip()
+    global _response_source
+    _response_source = "Rule · Yes/No"
+    q = normalize(question or "")
 
     # Hard-coded spooky defaults so common Ouija questions feel intentional.
     yes_patterns = [
@@ -361,6 +385,7 @@ Rules:
 Question: {question.strip()}
 """.strip()
 
+    _response_source = "LLM · Yes/No"
     out = ollama_completion(prompt, max_tokens=2, temperature=0.05)
     out_up = sanitize_word(out)
 
@@ -371,6 +396,7 @@ Question: {question.strip()}
         return "NO"
 
     # Absolute safety net: NEVER return MAYBE.
+    _response_source = "Random Yes/No · fallback"
     return random.choice(YES_NO)
 
 
@@ -379,6 +405,11 @@ Question: {question.strip()}
 # =====================================================
 
 def pick_one_word(question: str) -> str:
+    global _response_source
+    direct = direct_response(question)
+    if direct:
+        word, _response_source = direct
+        return word
     q = (question or "").lower()
 
     # Hard override: weather questions should always be simple and sensible.
@@ -389,27 +420,11 @@ def pick_one_word(question: str) -> str:
         "storm", "fog", "cold", "hot", "outside"
     ]
 
-    if any(w in q for w in weather_phrases):
+    if any(matches(q, w) for w in weather_phrases):
+        _response_source = "Rule · Weather"
         return "GOOD"
 
-    # Score categories by keyword matches.
-    # This prevents broad categories like "advice" from stealing questions like
-    # "what should I eat" when "eat" clearly means food.
-    category_scores = {}
-
-    for cat, kws in KEYWORDS.items():
-        score = 0
-        for kw in kws:
-            if kw in q:
-                # Longer keyword phrases are more specific, so they get more weight.
-                score += max(1, len(kw.split()))
-        if score > 0:
-            category_scores[cat] = score
-
-    if category_scores:
-        matched_category = max(category_scores, key=category_scores.get)
-    else:
-        matched_category = "generic"
+    matched_category = select_bank(question)
 
     bank = WORD_BANKS.get(matched_category) or WORD_BANKS["generic"]
 
@@ -439,8 +454,10 @@ Question: {question.strip()}
     safe_bank = [sanitize_word(w) for w in bank if sanitize_word(w) != "MAYBE"]
 
     if out_up in safe_bank:
+        _response_source = "LLM · " + matched_category.title() + " bank"
         return out_up
 
+    _response_source = "Word bank · " + matched_category.title() + " · fallback"
     return random.choice(safe_bank)
 
 
@@ -478,9 +495,12 @@ def main(auto_listen=False):
     try:
         if auto_listen:
             previous_handler = signal.signal(signal.SIGTERM, stop_automatic_service)
-            check_automatic_dependencies()
         try:
-            _run_board(auto_listen)
+            with status_heartbeat() if auto_listen else nullcontext():
+                if auto_listen:
+                    publish_status("STARTING", detail="Checking dependencies")
+                    check_automatic_dependencies()
+                _run_board(auto_listen)
         except Exception as exc:
             if auto_listen:
                 publish_status("ERROR", board="UNKNOWN", detail=str(exc))
@@ -493,7 +513,9 @@ def main(auto_listen=False):
 
 
 def _run_board(auto_listen):
+    global _response_source, _active_status_led
     status_led = create_status_led()
+    _active_status_led = status_led
     if auto_listen:
         publish_status("STARTING", board="CHECKING", detail="Starting automatic listener")
     if auto_listen:
@@ -598,6 +620,7 @@ def _run_board(auto_listen):
             # Explicit spelling is an instruction, not a yes/no capability question.
             spell_target = extract_spell_target(text)
             if spell_target:
+                _response_source = "Rule · Spelling"
                 print(f"[MODE] SPELL\n[RESPONSE] {spell_target}\n[SOURCE] rules")
                 if auto_listen:
                     publish_status("MOVING", heard=text, response=spell_target, board="MOVING")
@@ -617,6 +640,7 @@ def _run_board(auto_listen):
 
             policy_response = personal_or_presence_response(text)
             if policy_response == "WAIT":
+                _response_source = "Rule · Personal unknown"
                 print("[MODE] PERSONAL_UNKNOWN\n[RESPONSE] WAIT\n[SOURCE] rules")
                 if auto_listen:
                     publish_status("MOVING", heard=text, response="WAIT", board="MOVING")
@@ -633,7 +657,8 @@ def _run_board(auto_listen):
                             raise
                 continue
 
-            mode = "YES_NO" if policy_response == "YES" else classify_mode(text)
+            direct = direct_response(text) if policy_response is None else None
+            mode = "ONE_WORD" if direct else ("YES_NO" if policy_response == "YES" else classify_mode(text))
             print(f"[MODE] {mode}")
 
             if mode == "YES_NO":
@@ -664,7 +689,10 @@ def _run_board(auto_listen):
                             raise
 
             else:
-                word = pick_one_word(text)
+                if direct:
+                    word, _response_source = direct
+                else:
+                    word = pick_one_word(text)
                 print(f"[RESPONSE] {word}")
                 if auto_listen:
                     publish_status("MOVING", heard=text, response=word, board="MOVING")
