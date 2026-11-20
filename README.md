@@ -21,6 +21,18 @@ python -m openrouter.runner_spooky4
 
 Press Enter to speak, `t` to type a question, or `q` to quit. The package retains its historical name `openrouter` for compatibility; the maintained runner uses Ollama. Copy [.env.example](.env.example) to `.env` and configure it. The example disables physical motion for initial testing; set `OUIJA_HARDWARE_ENABLED=true` when ready.
 
+### Ready/listening LED
+
+The automatic listener drives a green LED on BCM GPIO 17 (physical header pin
+11). It is on in `READY` and `LISTENING`, and off while the board is thinking,
+moving, stopped, or in an error state. Set `OUIJA_STATUS_LED_GPIO` to use
+another BCM GPIO, or set `OUIJA_STATUS_LED_ENABLED=false` to disable it.
+
+Wire it as: GPIO 17 (pin 11) -> 220–1,000 ohm resistor -> LED anode (long leg);
+LED cathode (short leg/flat side) -> a Pi GND pin (for example physical pin 6).
+Do not connect an LED directly without a resistor. On the Pi, install the GPIO
+driver with `sudo apt install python3-rpi.gpio`.
+
 The `export` command selects microphone card 2, device 0 for the current terminal.
 Run it before starting the app. Check microphone card numbers with `arecord -l`;
 they can change after reconnecting USB devices. To save this choice for future
